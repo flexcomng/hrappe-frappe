@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include hrapp *.css
+recursive-include hrapp *.csv
+recursive-include hrapp *.html
+recursive-include hrapp *.ico
+recursive-include hrapp *.js
+recursive-include hrapp *.json
+recursive-include hrapp *.md
+recursive-include hrapp *.png
+recursive-include hrapp *.py
+recursive-include hrapp *.svg
+recursive-include hrapp *.txt
+recursive-exclude hrapp *.pyc
