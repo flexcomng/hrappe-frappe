@@ -5,6 +5,7 @@
 from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
+from frappe.utils import flt
 
 
 class HREmployeeAppraisal(Document):
@@ -20,3 +21,45 @@ class HREmployeeAppraisal(Document):
             row = self.append('performances', {})
             row.title = el.title
             row.description = el.description
+
+    def validate(self):
+        self.set_totals()
+
+    def set_totals(self):
+        jobs_count = len(self.jobs)
+        self.employee_job_total = 0
+        self.manager_job_total = 0
+        self.panelist_job_total = 0
+        if jobs_count > 0:
+            for row in self.jobs:
+                self.employee_job_total += flt(row.employee_rating)
+                self.manager_job_total += flt(row.manager_rating)
+                self.panelist_job_total += flt(row.panelist_rating)
+
+            self.employee_job_average = self.employee_job_total / jobs_count
+            self.manager_job_average = self.manager_job_total / jobs_count
+            self.panelist_job_average = self.panelist_job_total / jobs_count
+
+        performances_count = len(self.performances)
+        self.employee_performance_total = 0
+        self.manager_performance_total = 0
+        self.panelist_performance_total = 0
+        if performances_count > 0:
+            for elm in self.performances:
+                self.employee_performance_total += flt(elm.employee_rating)
+                self.manager_performance_total += flt(elm.manager_rating)
+                self.panelist_performance_total += flt(elm.panelist_rating)
+
+            self.employee_performance_average = self.employee_performance_total / performances_count
+            self.manager_performance_average = self.manager_performance_total / performances_count
+            self.panelist_performance_average = self.panelist_performance_total / performances_count
+
+        self.employee_total = self.employee_job_total + self.employee_performance_total
+        self.employee_average = (
+            self.employee_job_average + self.employee_performance_average) / 2
+        self.manager_total = self.manager_job_total + self.manager_performance_total
+        self.manager_average = (
+            self.manager_job_average + self.manager_performance_average) / 2
+        self.panelist_total = self.panelist_job_total + self.panelist_performance_total
+        self.panelist_average = (
+            self.panelist_job_average + self.panelist_performance_average) / 2
