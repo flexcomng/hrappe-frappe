@@ -13,6 +13,9 @@ class HRAppraisalPhase(Document):
     def validate(self):
         self.validate_dates()
 
+    def on_submit(self):
+        self.create_appraisals()
+
     def validate_dates(self):
         period_diff = date_diff(self.start, self.end)
         if period_diff >= 0:
@@ -28,3 +31,18 @@ class HRAppraisalPhase(Document):
         if end_period_diff <= 0:
             frappe.throw(
                 _("The end date of the Appraisal must be after the end date of the period"))
+
+    def create_appraisals(self):
+        filters = {"company": self.company, "status": "Active"}
+        if self.department:
+            filters["department"] = self.department
+        employees = frappe.get_all("Employee", filters=filters)
+        for emp in employees:
+            if self.appraisal_type == "Employees":
+                doc = frappe.new_doc("HR Employee Appraisal")
+                doc.employee = emp.name
+                doc.phase = self.name
+                doc.template = self.template
+                doc.save(ignore_permissions=True)
+                frappe.msgprint(
+                    _("New Appraisal is created for meployee {0}").format(emp.name), alert=True)
