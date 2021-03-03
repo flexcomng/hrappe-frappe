@@ -2,7 +2,14 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('HR Appraisal Phase', {
-	// refresh: function(frm) {
-
-	// }
+	setup: function (frm) {
+		frm.set_query('department', function () {
+			return {
+				filters: {
+					'company': frm.doc.company,
+					'is_group': 0,
+				}
+			};
+		});
+	}
 });
