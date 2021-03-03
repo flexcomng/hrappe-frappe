@@ -143,3 +143,19 @@ app_license = "MIT"
 #
 # auto_cancel_exempted_doctypes = ["Auto Repeat"]
 
+fixtures = [
+    {"doctype": "Custom Field", "filters": [["name", "in", (
+
+    )]]},
+    {"doctype": "Property Setter", "filters": [["name", "in", (
+
+    )]]},
+    {"doctype": "Custom DocPerm", "filters": [["name", "in", (
+
+    )]]},
+
+    {"doctype": "Desk Page", "filters": [["name", "in", (
+
+    )]]},
+
+]
