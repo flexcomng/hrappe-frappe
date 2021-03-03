@@ -1,0 +1,212 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "HEA-.YY.-.######",
+ "creation": "2021-03-02 10:28:10.241742",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employee",
+  "employee_name",
+  "manager",
+  "column_break_3",
+  "posting_date",
+  "phase",
+  "template",
+  "amended_from",
+  "job_description_section",
+  "jobs",
+  "jobs_employee_comments",
+  "jobs_manager_comment",
+  "general_performance_requirements_section",
+  "performances",
+  "section_break_13",
+  "employee_comment",
+  "manager_comment",
+  "overall_rating_section"
+ ],
+ "fields": [
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "phase",
+   "fieldtype": "Link",
+   "label": "Appraisal Phase",
+   "options": "HR Appraisal Phase"
+  },
+  {
+   "fetch_from": "phase.template",
+   "fieldname": "template",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Template",
+   "options": "HR Appraisal Template",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "HR Employee Appraisal",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "job_description_section",
+   "fieldtype": "Section Break",
+   "label": "JOB DESCRIPTION"
+  },
+  {
+   "fieldname": "jobs",
+   "fieldtype": "Table",
+   "label": "Appraisal Job Details",
+   "options": "HR Appraisal Job Details",
+   "reqd": 1
+  },
+  {
+   "fieldname": "general_performance_requirements_section",
+   "fieldtype": "Section Break",
+   "label": "GENERAL PERFORMANCE REQUIREMENTS"
+  },
+  {
+   "fieldname": "performances",
+   "fieldtype": "Table",
+   "label": "Appraisal Performance Details",
+   "options": "HR Appraisal Performance Details",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.reports_to",
+   "fieldname": "manager",
+   "fieldtype": "Link",
+   "label": "Manager",
+   "options": "Employee",
+   "read_only": 1
+  },
+  {
+   "fieldname": "jobs_employee_comments",
+   "fieldtype": "Small Text",
+   "label": "Employee Comments"
+  },
+  {
+   "fieldname": "jobs_manager_comment",
+   "fieldtype": "Small Text",
+   "label": "Manager Comment"
+  },
+  {
+   "fieldname": "section_break_13",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "employee_comment",
+   "fieldtype": "Small Text",
+   "label": "Employee Comment"
+  },
+  {
+   "fieldname": "manager_comment",
+   "fieldtype": "Small Text",
+   "label": "Manager Comment"
+  },
+  {
+   "fieldname": "overall_rating_section",
+   "fieldtype": "Section Break",
+   "label": "Overall Rating"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Read Only",
+   "label": "Employee Name"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2021-03-02 18:58:42.761203",
+ "modified_by": "Administrator",
+ "module": "HRapp",
+ "name": "HR Employee Appraisal",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "set_user_permissions": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "if_owner": 1,
+   "read": 1,
+   "role": "Employee",
+   "select": 1,
+   "write": 1
+  }
+ ],
+ "show_preview_popup": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "employee_name",
+ "track_changes": 1
+}

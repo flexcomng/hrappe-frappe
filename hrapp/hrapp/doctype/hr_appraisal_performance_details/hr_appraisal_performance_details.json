@@ -1,0 +1,89 @@
+{
+ "actions": [],
+ "creation": "2021-03-02 10:36:52.350673",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "title",
+  "description",
+  "employee_rating",
+  "employee_comment",
+  "manager_rating",
+  "manager_comment",
+  "panelist_rating",
+  "panelist_comment"
+ ],
+ "fields": [
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Title",
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Description"
+  },
+  {
+   "columns": 1,
+   "fieldname": "employee_rating",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Employee Rating",
+   "options": "\n1\n2\n3\n4\n5"
+  },
+  {
+   "columns": 2,
+   "fieldname": "employee_comment",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Employee Comment"
+  },
+  {
+   "columns": 1,
+   "fieldname": "manager_rating",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Manager Rating",
+   "options": "\n1\n2\n3\n4\n5"
+  },
+  {
+   "columns": 2,
+   "fieldname": "manager_comment",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Manager Comment"
+  },
+  {
+   "fieldname": "panelist_rating",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Panelist Rating"
+  },
+  {
+   "fieldname": "panelist_comment",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Panelist Comment",
+   "options": "\n1\n2\n3\n4\n5"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2021-03-02 19:20:21.869020",
+ "modified_by": "Administrator",
+ "module": "HRapp",
+ "name": "HR Appraisal Performance Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_rename": 1,
  "autoname": "field:title",
  "creation": "2021-02-25 21:27:07.042304",
  "doctype": "DocType",
@@ -52,7 +53,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-02-25 22:00:51.431208",
+ "modified": "2021-03-03 08:59:48.102880",
  "modified_by": "Administrator",
  "module": "HRapp",
  "name": "HR Appraisal Template",
@@ -93,6 +94,10 @@
    "role": "HR User",
    "share": 1,
    "write": 1
+  },
+  {
+   "role": "Employee",
+   "select": 1
   }
  ],
  "quick_entry": 1,
