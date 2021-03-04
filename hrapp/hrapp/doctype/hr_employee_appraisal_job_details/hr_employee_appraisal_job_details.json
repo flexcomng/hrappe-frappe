@@ -1,0 +1,68 @@
+{
+ "actions": [],
+ "creation": "2021-02-25 22:01:40.195557",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "title",
+  "description",
+  "employee_rating",
+  "manager_rating",
+  "panelist_rating"
+ ],
+ "fields": [
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Title",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Description",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "employee_rating",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Employee Rating",
+   "options": "\n1\n2\n3\n4\n5"
+  },
+  {
+   "columns": 1,
+   "fieldname": "manager_rating",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Manager Rating",
+   "options": "\n1\n2\n3\n4\n5"
+  },
+  {
+   "columns": 1,
+   "fieldname": "panelist_rating",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Panelist Rating",
+   "options": "\n1\n2\n3\n4\n5"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2021-03-04 09:26:19.280579",
+ "modified_by": "Administrator",
+ "module": "HRapp",
+ "name": "HR Employee Appraisal Job Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

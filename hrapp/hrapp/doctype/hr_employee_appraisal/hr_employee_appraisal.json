@@ -13,6 +13,7 @@
   "column_break_3",
   "posting_date",
   "phase",
+  "end_date",
   "template",
   "amended_from",
   "job_description_section",
@@ -114,7 +115,7 @@
    "fieldname": "jobs",
    "fieldtype": "Table",
    "label": "Appraisal Job Details",
-   "options": "HR Appraisal Job Details"
+   "options": "HR Employee Appraisal Job Details"
   },
   {
    "fieldname": "general_performance_requirements_section",
@@ -125,7 +126,7 @@
    "fieldname": "performances",
    "fieldtype": "Table",
    "label": "Appraisal Performance Details",
-   "options": "HR Appraisal Performance Details"
+   "options": "HR Employee Appraisal Performance Details"
   },
   {
    "fetch_from": "employee.reports_to",
@@ -333,12 +334,19 @@
    "fieldname": "recommendation",
    "fieldtype": "Small Text",
    "label": "Recommendation"
+  },
+  {
+   "fetch_from": "phase.end_date",
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-03-03 11:25:56.238788",
+ "modified": "2021-03-04 09:22:04.713377",
  "modified_by": "Administrator",
  "module": "HRapp",
  "name": "HR Employee Appraisal",

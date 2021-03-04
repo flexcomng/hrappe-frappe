@@ -1,6 +1,6 @@
 {
  "actions": [],
- "creation": "2021-02-25 22:01:40.195557",
+ "creation": "2021-03-04 09:25:15.268558",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -8,8 +8,7 @@
   "title",
   "description",
   "employee_rating",
-  "manager_rating",
-  "panelist_rating"
+  "employee_comment"
  ],
  "fields": [
   {
@@ -17,13 +16,15 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Title",
+   "read_only": 1,
    "reqd": 1
   },
   {
    "fieldname": "description",
    "fieldtype": "Small Text",
    "in_list_view": 1,
-   "label": "Description"
+   "label": "Description",
+   "read_only": 1
   },
   {
    "columns": 1,
@@ -34,29 +35,19 @@
    "options": "\n1\n2\n3\n4\n5"
   },
   {
-   "columns": 1,
-   "fieldname": "manager_rating",
-   "fieldtype": "Select",
+   "fieldname": "employee_comment",
+   "fieldtype": "Small Text",
    "in_list_view": 1,
-   "label": "Manager Rating",
-   "options": "\n1\n2\n3\n4\n5"
-  },
-  {
-   "columns": 1,
-   "fieldname": "panelist_rating",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Panelist Rating",
-   "options": "\n1\n2\n3\n4\n5"
+   "label": "Employee Comment"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2021-03-02 13:42:50.918872",
+ "modified": "2021-03-04 09:25:15.268558",
  "modified_by": "Administrator",
  "module": "HRapp",
- "name": "HR Appraisal Job Details",
+ "name": "HR Supervisor Appraisal Job Details",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

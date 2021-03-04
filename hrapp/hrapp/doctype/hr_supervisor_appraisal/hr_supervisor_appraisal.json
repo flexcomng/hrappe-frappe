@@ -1,0 +1,224 @@
+{
+ "actions": [],
+ "autoname": "HSP-.YY.-.######",
+ "creation": "2021-03-04 10:06:06.788663",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "supervisor",
+  "supervisor_name",
+  "column_break_5",
+  "posting_date",
+  "phase",
+  "end_date",
+  "template",
+  "job_description_section",
+  "jobs",
+  "job_total",
+  "job_average",
+  "general_performance_requirements_section",
+  "performances",
+  "performance_total",
+  "performance_average",
+  "overall_rating_section",
+  "total",
+  "average",
+  "section_break_13",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fetch_from": "employee.reports_to",
+   "fieldname": "supervisor",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Supervisor",
+   "options": "Employee",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "supervisor.employee_name",
+   "fieldname": "supervisor_name",
+   "fieldtype": "Read Only",
+   "label": "Supervisor Name"
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "phase",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Appraisal Phase",
+   "options": "HR Appraisal Phase",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "phase.end_date",
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "phase.template",
+   "fieldname": "template",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Template",
+   "options": "HR Appraisal Template",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "job_description_section",
+   "fieldtype": "Section Break",
+   "label": "JOB DESCRIPTION"
+  },
+  {
+   "fieldname": "jobs",
+   "fieldtype": "Table",
+   "label": "Supervisor Appraisal Job Details",
+   "options": "HR Supervisor Appraisal Job Details"
+  },
+  {
+   "fieldname": "general_performance_requirements_section",
+   "fieldtype": "Section Break",
+   "label": "GENERAL PERFORMANCE REQUIREMENTS"
+  },
+  {
+   "fieldname": "performances",
+   "fieldtype": "Table",
+   "label": "Supervisor Appraisal Performance Details",
+   "options": "HR Supervisor Appraisal Performance Details"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "HR Supervisor Appraisal",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_13",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "job_total",
+   "fieldtype": "Float",
+   "label": " Job Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "job_average",
+   "fieldtype": "Float",
+   "label": "Job Average",
+   "read_only": 1
+  },
+  {
+   "fieldname": "performance_total",
+   "fieldtype": "Float",
+   "label": "Performance Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "performance_average",
+   "fieldtype": "Float",
+   "label": "Performance Average",
+   "read_only": 1
+  },
+  {
+   "fieldname": "overall_rating_section",
+   "fieldtype": "Section Break",
+   "label": "Overall Rating"
+  },
+  {
+   "fieldname": "total",
+   "fieldtype": "Float",
+   "label": "Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "average",
+   "fieldtype": "Float",
+   "label": "Average",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2021-03-04 10:22:52.586669",
+ "modified_by": "Administrator",
+ "module": "HRapp",
+ "name": "HR Supervisor Appraisal",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "set_user_permissions": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Employee",
+   "select": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "supervisor_name",
+ "track_changes": 1
+}
