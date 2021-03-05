@@ -59,21 +59,14 @@ def get_all(doctype, fields=None, filters=None, order_by=None, group_by=None, st
     return frappe.get_all(doctype, fields, filters, order_by, group_by, start, page_length)
 
 
-@ frappe.whitelist(allow_guest=True)
-def get_items():
-    items = frappe.get_all("Item", filters={"disabled": False}, fields=["*"])
-    return items
-
-
-@ frappe.whitelist(allow_guest=True)
-def get_groups():
-    groups = frappe.get_all("Item Base Group")
-    for item in groups:
-        item.active = False
-        item.sub_groups = []
-        item.sub_groups = frappe.get_all(
-            "Item Sub Group", filters={"base_group": item.name})
-    return groups
+@ frappe.whitelist()
+def get_meta(doctype):
+    try:
+        data = frappe.get_meta(doctype)
+        return data
+    except Exception:
+        frappe.local.response.http_status_code = 404
+        return Exception
 
 
 @ frappe.whitelist(allow_guest=True)
