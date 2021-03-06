@@ -30,6 +30,30 @@ def get_doc(doctype, docname):
 
 
 @ frappe.whitelist()
+def get_meta(doctype):
+    try:
+        data = frappe.get_meta(doctype)
+        return data
+    except Exception:
+        frappe.local.response.http_status_code = 404
+        return Exception
+
+
+@ frappe.whitelist()
+def get_doc_meta(doctype, docname):
+    if not frappe.db.exists(doctype, docname):
+        frappe.local.response.http_status_code = 404
+        return {}
+    doc = frappe.get_doc(doctype, docname)
+    meta = frappe.get_meta(doctype)
+    data = {
+        "doc": doc,
+        "meta": meta
+    }
+    return data
+
+
+@ frappe.whitelist()
 def update_doc(doctype, doc, docname=None, action="Save"):
     doc = json.loads(doc)
     if not docname or not frappe.db.exists(doctype, docname):
@@ -57,16 +81,6 @@ def get_all(doctype, fields=None, filters=None, order_by=None, group_by=None, st
     else:
         filters = json.loads(filters)
     return frappe.get_all(doctype, fields, filters, order_by, group_by, start, page_length)
-
-
-@ frappe.whitelist()
-def get_meta(doctype):
-    try:
-        data = frappe.get_meta(doctype)
-        return data
-    except Exception:
-        frappe.local.response.http_status_code = 404
-        return Exception
 
 
 @ frappe.whitelist(allow_guest=True)
