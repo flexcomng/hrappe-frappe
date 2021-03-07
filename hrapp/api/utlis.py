@@ -3,6 +3,7 @@ from frappe import _
 from frappe.utils import cint, get_formatted_email
 from xml.etree import cElementTree as ElementTree
 from binascii import a2b_base64
+import base64
 
 settings = frappe.get_doc("HRapp Settings",
                           "HRapp Settings")
@@ -189,3 +190,9 @@ def add_image(file, fieldname, doctype, docname, file_name=None):
 
     ret.save(ignore_permissions=True)
     return ret.file_url
+
+
+def to_base64(value):
+    data_bytes = value.encode('ascii')
+    data = base64.b64encode(data_bytes)
+    return str(data)[2:-1]

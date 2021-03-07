@@ -5,13 +5,67 @@
 from __future__ import unicode_literals
 import frappe
 from frappe import _
+from frappe.auth import LoginManager
+import uuid
 import json
 from frappe.utils.pdf import get_pdf
 from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry
 from frappe.utils import nowdate, getdate, cint, today
 import requests
-from hrapp.api.utlis import xml_to_dic, send_welcome_mail_to_user, reset_password
+from hrapp.api.utlis import xml_to_dic, send_welcome_mail_to_user, reset_password, to_base64
 from frappe.utils.password import update_password as _update_password
+
+
+@frappe.whitelist(allow_guest=True)
+def login(usr, pwd):
+    login_manager = LoginManager()
+    login_manager.authenticate(usr, pwd)
+    login_manager.post_login()
+    if frappe.response['message'] == 'Logged In':
+        frappe.response['user'] = login_manager.user
+        frappe.response['token'] = generate_key(login_manager.user)
+
+
+def generate_key(user):
+    """
+    generate api key and api secret
+    :param user: str
+    """
+    user_details = frappe.get_doc("User", user)
+    # if api key is not set generate api key
+    if not user_details.api_key:
+        api_key = frappe.generate_hash(length=15)
+        user_details.api_key = api_key
+    if not user_details.api_secret:
+        api_secret = frappe.generate_hash(length=15)
+        user_details.api_secret = api_secret
+    user_details.save()
+    api_kyes_base64 = to_base64(user_details.api_key+":"+user_details.api_key)
+    token = "'Authorization': 'Basic {0}'".format(api_kyes_base64)
+    return token
+
+
+@frappe.whitelist()
+def generate_response(_type, status=None, message=None, data=None, error=None):
+    if _type == "S":
+        if status:
+            frappe.response["status_code"] = int(status)
+        else:
+            frappe.response["status_code"] = 200
+        frappe.response["msg"] = message
+        frappe.response["data"] = data
+    else:
+        frappe.log_error(frappe.get_traceback())
+        if status:
+            frappe.response["status_code"] = status
+        else:
+            frappe.response["status_code"] = 500
+        if message:
+            frappe.response["msg"] = message
+        else:
+            frappe.response["msg"] = "Something Went Wrong"
+        frappe.response["msg"] = message
+        frappe.response["data"] = []
 
 
 @ frappe.whitelist()
