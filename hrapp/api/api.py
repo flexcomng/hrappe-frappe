@@ -141,15 +141,19 @@ def update_doc(doc, doctype=None, docname=None, action="Save"):
 
 @ frappe.whitelist()
 def get_all(doctype, fields=None, filters=None, order_by=None, group_by=None, start=None, page_length=None):
-    if not fields:
-        fields = ["*"]
-    else:
-        fields = json.loads(fields)
-    if not filters:
-        filters = {}
-    else:
-        filters = json.loads(filters)
-    return frappe.get_all(doctype, fields, filters, order_by, group_by, start, page_length)
+    try:
+        if not fields:
+            fields = ["*"]
+        else:
+            fields = json.loads(fields)
+        if not filters:
+            filters = {}
+        else:
+            filters = json.loads(filters)
+        data = frappe.get_all(doctype, fields, filters, order_by, group_by, start, page_length)
+        return generate_response("S", "200", message="Success", data=data)
+    except Exception as e:
+        return generate_response("F", error=e)  
 
 
 @ frappe.whitelist(allow_guest=True)
