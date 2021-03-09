@@ -322,6 +322,7 @@ def upload_image(doctype, docname, field_name, image):
         delete_image(doctype, docname, field_name)
         image_link = add_image(
             image, 'image', doctype, docname)
+
         frappe.set_value(doctype, docname, field_name, image_link)
         frappe.db.commit()
         if image_link:

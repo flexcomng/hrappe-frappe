@@ -150,6 +150,8 @@ def send_welcome_mail_to_user(user):
 
 def add_image(file, fieldname, doctype, docname, file_name=None):
     file_name = file_name or frappe.utils.random_string(20) + '.png'
+    if "," in file:
+        file = file.split(",")[1]
     ret = frappe.get_doc({
         "doctype": "File",
         "attached_to_doctype": doctype,
@@ -161,7 +163,6 @@ def add_image(file, fieldname, doctype, docname, file_name=None):
         "is_private": 0,
         "content": a2b_base64(file)
     })
-
     ret.save(ignore_permissions=True)
     return ret.file_url
 
