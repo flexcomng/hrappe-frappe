@@ -81,9 +81,9 @@ def get_user():
 @ frappe.whitelist()
 def get_doc(doctype, docname):
     if not frappe.db.exists(doctype, docname):
-        return {}
+        return generate_response("F", "404", error="{0} '{1}' not exist".format(doctype, docname))
     doc = frappe.get_doc(doctype, docname)
-    return doc
+    return generate_response("S", "200", message=doc.name, data=doc)
 
 
 @ frappe.whitelist()
