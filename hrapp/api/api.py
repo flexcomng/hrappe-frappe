@@ -112,19 +112,21 @@ def get_doc_meta(doctype, docname):
 
 @ frappe.whitelist()
 def update_doc(doctype, doc, docname=None, action="Save"):
-    doc = json.loads(doc)
-    if not docname or not frappe.db.exists(doctype, docname):
-        doc["name"] = ""
-        cur_doc = frappe.new_doc(doctype)
-    else:
-        cur_doc = frappe.get_doc(doctype, docname)
-    cur_doc.flags.ignore_permissions = True
-    cur_doc.update(doc)
-    cur_doc.save(ignore_permissions=True)
-    if action == "Submit":
-        cur_doc.submit()
-    cur_doc.reload()
-    return cur_doc
+    try:
+        if not docname or not frappe.db.exists(doctype, docname):
+            doc["name"] = ""
+            cur_doc = frappe.new_doc(doctype)
+        else:
+            cur_doc = frappe.get_doc(doctype, docname)
+        cur_doc.flags.ignore_permissions = True
+        cur_doc.update(doc)
+        cur_doc.save(ignore_permissions=True)
+        if action == "Submit":
+            cur_doc.submit()
+        cur_doc.reload()
+        return generate_response("S", "200", message="{0}: '{1}' Updated Successfully".format(doctype,docname), data=doc.name)
+    except Exception as e:
+        return generate_response("F", error=e)  
 
 
 @ frappe.whitelist()
