@@ -111,20 +111,30 @@ def get_doc_meta(doctype, docname):
 
 
 @ frappe.whitelist()
-def update_doc(doctype, doc, docname=None, action="Save"):
+def update_doc(doc, doctype=None, docname=None, action="Save"):
     try:
-        if not docname or not frappe.db.exists(doctype, docname):
-            doc["name"] = ""
-            cur_doc = frappe.new_doc(doctype)
+        cur_doc = None
+        status = None
+        if not doc.get("doctype") and doctype:
+            doc["doctype"] = doctype
+        if not doc.get("name") and docname:
+            doc["name"] = docname
+        if frappe.db.exists(doc.get("doctype"), doc.get("name")):
+            cur_doc = frappe.get_doc(doc.get("doctype"), doc.get("name"))
+            status = "Updated"
         else:
-            cur_doc = frappe.get_doc(doctype, docname)
+            doc["name"] = ""
+            cur_doc = frappe.new_doc(doc.get("doctype"))
+            status = "Created"
+        if not cur_doc:
+            return generate_response("F")
         cur_doc.flags.ignore_permissions = True
         cur_doc.update(doc)
         cur_doc.save(ignore_permissions=True)
         if action == "Submit":
             cur_doc.submit()
-        cur_doc.reload()
-        return generate_response("S", "200", message="{0}: '{1}' Updated Successfully".format(doctype,docname), data=doc.name)
+        frappe.db.commit()
+        return generate_response("S", "200", message="{0}: '{1}' {2} Successfully".format(cur_doc.doctype,cur_doc.name,status), data=cur_doc)
     except Exception as e:
         return generate_response("F", error=e)  
 
