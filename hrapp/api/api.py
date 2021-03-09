@@ -12,7 +12,7 @@ from frappe.utils.pdf import get_pdf
 from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry
 from frappe.utils import nowdate, getdate, cint, today
 import requests
-from hrapp.api.utlis import xml_to_dic, send_welcome_mail_to_user, reset_password, to_base64
+from hrapp.api.utlis import xml_to_dic, send_welcome_mail_to_user, reset_password, to_base64, add_image, delete_image
 from frappe.utils.password import update_password as _update_password
 
 
@@ -62,10 +62,13 @@ def generate_response(_type, status=None, message=None, data=None, error=None):
             frappe.response["status_code"] = 500
         if message:
             frappe.response["msg"] = message
+        elif error:
+            frappe.response["msg"] = str(error)
         else:
             frappe.response["msg"] = "Something Went Wrong"
-        frappe.response["msg"] = message
-        frappe.response["data"] = []
+        if error:
+            frappe.response["error"] = error
+        frappe.response["data"] = None
 
 
 @ frappe.whitelist()
@@ -308,3 +311,20 @@ def reset_pass(user):
     except frappe.DoesNotExistError:
         frappe.clear_messages()
         return 'User not found'
+
+
+@ frappe.whitelist()
+def upload_image(doctype, docname, field_name, image):
+    try:
+        exists = frappe.db.exists(doctype, docname)
+        if not exists:
+            return generate_response("F", "404", error="Doctype {0} is not exist".format(docname))
+        delete_image(doctype, docname, field_name)
+        image_link = add_image(
+            image, 'image', doctype, docname)
+        frappe.set_value(doctype, docname, field_name, image_link)
+        frappe.db.commit()
+        if image_link:
+            return generate_response("S", "200", message="Image Added Successfully", data=image_link)
+    except Exception as e:
+        return generate_response("F", error=e)

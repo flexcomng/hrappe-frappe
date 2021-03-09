@@ -148,32 +148,6 @@ def send_welcome_mail_to_user(user):
                          ))
 
 
-def send_login_mail(user, subject, template, add_args, now=None):
-    """send mail with login details"""
-    from frappe.utils.user import get_user_fullname
-
-    full_name = get_user_fullname(frappe.session['user'])
-    if full_name == "Guest":
-        full_name = "Administrator"
-
-    args = {
-        'first_name': user.first_name or user.last_name or "user",
-        'user': user.name,
-        'title': subject,
-        'login_url': settings.portal_url+"/login",
-        'user_fullname': full_name
-    }
-
-    args.update(add_args)
-
-    sender = frappe.session.user not in STANDARD_USERS and get_formatted_email(
-        frappe.session.user) or None
-
-    frappe.sendmail(recipients=user.email, sender=sender, subject=subject,
-                    template=template, args=args, header=[subject, "green"],
-                    delayed=(not now) if now != None else user.flags.delay_emails, retry=3)
-
-
 def add_image(file, fieldname, doctype, docname, file_name=None):
     file_name = file_name or frappe.utils.random_string(20) + '.png'
     ret = frappe.get_doc({
@@ -196,3 +170,16 @@ def to_base64(value):
     data_bytes = value.encode('ascii')
     data = base64.b64encode(data_bytes)
     return str(data)[2:-1]
+
+
+def delete_image(doctype, docname, field_name):
+    img_link = frappe.get_value(doctype, docname, field_name)
+    if img_link:
+        image_list = frappe.get_all(
+            'File', filters={'file_name': img_link.split('/')[-1]})
+        if len(image_list) > 0:
+            image = image_list[0]
+            frappe.delete_doc('File', image.name)
+            frappe.db.commit()
+            return True
+    return False
