@@ -18,13 +18,15 @@ from frappe.utils.password import update_password as _update_password
 
 @frappe.whitelist(allow_guest=True)
 def login(usr, pwd):
-    login_manager = LoginManager()
-    login_manager.authenticate(usr, pwd)
-    login_manager.post_login()
-    if frappe.response['message'] == 'Logged In':
-        frappe.response['user'] = login_manager.user
-        frappe.response['token'] = generate_key(login_manager.user)
-
+    try:
+        login_manager = LoginManager()
+        login_manager.authenticate(usr, pwd)
+        login_manager.post_login()
+        if frappe.response['message'] == 'Logged In':
+            frappe.response['user'] = login_manager.user
+            frappe.response['token'] = generate_key(login_manager.user)
+    except Exception as e:
+        return generate_response("F", error=e)
 
 def generate_key(user):
     """
@@ -73,41 +75,45 @@ def generate_response(_type, status=None, message=None, data=None, error=None):
 
 @ frappe.whitelist()
 def get_user():
-    user = frappe.session.user
-    user_doc = frappe.get_doc("User", user)
-    return user_doc
+    try:
+        user = frappe.session.user
+        user_doc = frappe.get_doc("User", user)
+        return generate_response("S", "200", message="Success", data=user_doc)
+    except Exception as e:
+        return generate_response("F", error=e)
 
 
 @ frappe.whitelist()
 def get_doc(doctype, docname):
     if not frappe.db.exists(doctype, docname):
+        frappe.local.response.http_status_code = 404
         return generate_response("F", "404", error="{0} '{1}' not exist".format(doctype, docname))
     doc = frappe.get_doc(doctype, docname)
-    return generate_response("S", "200", message=doc.name, data=doc)
+    return generate_response("S", "200", message="Success", data=doc)
 
 
 @ frappe.whitelist()
 def get_meta(doctype):
     try:
         data = frappe.get_meta(doctype)
-        return data
+        generate_response("S", "200", message="Success", data=data)
     except Exception:
         frappe.local.response.http_status_code = 404
-        return Exception
+        return generate_response("F", "404", error="{0} not exist".format(doctype))
 
 
 @ frappe.whitelist()
 def get_doc_meta(doctype, docname):
     if not frappe.db.exists(doctype, docname):
         frappe.local.response.http_status_code = 404
-        return {}
+        return generate_response("F", "404", error="{0} '{1}' not exist".format(doctype, docname))
     doc = frappe.get_doc(doctype, docname)
     meta = frappe.get_meta(doctype)
     data = {
         "doc": doc,
         "meta": meta
     }
-    return data
+    return generate_response("S", "200", message="Success", data=data)
 
 
 @ frappe.whitelist()
@@ -158,63 +164,72 @@ def get_all(doctype, fields=None, filters=None, order_by=None, group_by=None, st
 
 @ frappe.whitelist(allow_guest=True)
 def get_settings():
-    doc = frappe.get_doc("HRapp Settings", "HRapp Settings")
-    return doc
+    try:    
+        doc = frappe.get_doc("HRapp Settings", "HRapp Settings")
+        return generate_response("S", "200", message="Success", data=doc)
+    except Exception as e:
+        return generate_response("F", error=e)
 
 
 @ frappe.whitelist(allow_guest=True)
 def get_item(docname):
     if not frappe.db.exists("Item", docname):
-        return {}
+        return generate_response("F", error="Item not exist")  
     doc = frappe.get_doc("Item", docname)
-    return doc
+    return generate_response("S", "200", message="Success", data=doc)
 
 
 @ frappe.whitelist()
 def get_pdf_file(doctype, docname):
-    print_format = ""
-    default_print_format = frappe.db.get_value('Property Setter', dict(
-        property='default_print_format', doc_type=doctype), "value")
-    if default_print_format:
-        print_format = default_print_format
-    else:
-        print_format = "Standard"
+    try:
+        print_format = ""
+        default_print_format = frappe.db.get_value('Property Setter', dict(
+            property='default_print_format', doc_type=doctype), "value")
+        if default_print_format:
+            print_format = default_print_format
+        else:
+            print_format = "Standard"
 
-    html = frappe.get_print(
-        doctype, docname, print_format, doc=None, no_letterhead=0)
-    frappe.local.response.filename = "{name}.pdf".format(
-        name=docname.replace(" ", "-").replace("/", "-"))
-    frappe.local.response.filecontent = get_pdf(html)
-    frappe.local.response.type = "pdf"
+        html = frappe.get_print(
+            doctype, docname, print_format, doc=None, no_letterhead=0)
+        frappe.local.response.filename = "{name}.pdf".format(
+            name=docname.replace(" ", "-").replace("/", "-"))
+        frappe.local.response.filecontent = get_pdf(html)
+        frappe.local.response.type = "pdf"
+    except Exception as e:
+        return generate_response("F", error=e)
 
 
 @ frappe.whitelist()
 def make_payment_si(docname, ref_type, ref_no, amount=None, power_data=None):
-    payment_doc = get_payment_entry(
-        "Sales Invoice", docname)
-    payment_doc.update({
-        "mode_of_payment": ref_type,
-        "reference_no": ref_no,
-        "reference_date": nowdate(),
-    })
-    if amount:
+    try:
+        payment_doc = get_payment_entry(
+            "Sales Invoice", docname)
         payment_doc.update({
-            "paid_amount": float(amount),
-            "received_amount": float(amount),
+            "mode_of_payment": ref_type,
+            "reference_no": ref_no,
+            "reference_date": nowdate(),
         })
-    if power_data:
-        payment_doc.update({
-            "power_data": str(power_data),
-        })
+        if amount:
+            payment_doc.update({
+                "paid_amount": float(amount),
+                "received_amount": float(amount),
+            })
+        if power_data:
+            payment_doc.update({
+                "power_data": str(power_data),
+            })
 
-    payment_doc.set_amounts()
-    payment_doc.setup_party_account_field()
-    payment_doc.flags.ignore_permissions = True
-    frappe.flags.ignore_account_permission = True
-    payment_doc.save(ignore_permissions=True)
-    payment_doc.submit()
-    frappe.db.commit()
-    return payment_doc.name
+        payment_doc.set_amounts()
+        payment_doc.setup_party_account_field()
+        payment_doc.flags.ignore_permissions = True
+        frappe.flags.ignore_account_permission = True
+        payment_doc.save(ignore_permissions=True)
+        payment_doc.submit()
+        frappe.db.commit()
+        return generate_response("S", "200", message="Success", data=payment_doc.name)
+    except Exception as e:
+        return generate_response("F", error=e)
 
 
 def create_sales_invoice(customer, ammount, qty, ref_no):
@@ -288,20 +303,23 @@ def handle_password_test_fail(result):
 
 @ frappe.whitelist()
 def update_password(new_password):
-    result = test_password_strength(new_password)
-    feedback = result.get("feedback", None)
+    try:
+        result = test_password_strength(new_password)
+        feedback = result.get("feedback", None)
 
-    if feedback and not feedback.get('password_policy_validation_passed', False):
-        handle_password_test_fail(result)
+        if feedback and not feedback.get('password_policy_validation_passed', False):
+            handle_password_test_fail(result)
 
-    user = frappe.session.user
+        user = frappe.session.user
 
-    _update_password(user, new_password)
+        _update_password(user, new_password)
 
-    frappe.local.login_manager.login_as(user)
+        frappe.local.login_manager.login_as(user)
 
-    frappe.db.set_value("User", user, "last_password_reset_date", today())
-    frappe.db.set_value("User", user, "reset_password_key", "")
+        frappe.db.set_value("User", user, "last_password_reset_date", today())
+        frappe.db.set_value("User", user, "reset_password_key", "")
+    except Exception as e:
+        return generate_response("F", error=e)
 
 
 def send_welcome_mail(doc, method):
@@ -311,23 +329,25 @@ def send_welcome_mail(doc, method):
 
 @ frappe.whitelist(allow_guest=True)
 def reset_pass(user):
-    if user == "Administrator":
-        return 'not allowed'
-
     try:
-        user = frappe.get_doc("User", user)
-        if not user.enabled:
-            return 'disabled'
+        if user == "Administrator":
+            return 'not allowed'
 
-        user.validate_reset_password()
-        reset_password(user, send_email=True)
+        try:
+            user = frappe.get_doc("User", user)
+            if not user.enabled:
+                return 'disabled'
 
-        return frappe.msgprint(_("Password reset instructions have been sent to your email"))
+            user.validate_reset_password()
+            reset_password(user, send_email=True)
 
-    except frappe.DoesNotExistError:
-        frappe.clear_messages()
-        return 'User not found'
+            return frappe.msgprint(_("Password reset instructions have been sent to your email"))
 
+        except frappe.DoesNotExistError:
+            frappe.clear_messages()
+            return 'User not found'
+    except Exception as e:
+        return generate_response("F", error=e)
 
 @ frappe.whitelist()
 def upload_image(doctype, docname, field_name, image):
