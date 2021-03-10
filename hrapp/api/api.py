@@ -17,7 +17,11 @@ from frappe.utils.password import update_password as _update_password
 
 
 @frappe.whitelist(allow_guest=True)
-def login(usr, pwd):
+def login(usr=None, pwd=None):
+    if not usr:
+        return generate_response("F", error="'usr' parameter is required")
+    if not pwd:
+        return generate_response("F", error="'pwd' parameter is required")
     try:
         login_manager = LoginManager()
         login_manager.authenticate(usr, pwd)
@@ -59,7 +63,12 @@ def get_user():
 
 
 @ frappe.whitelist()
-def get_doc(doctype, docname):
+def get_doc(doctype=None, docname=None):
+    if not doctype:
+        return generate_response("F", error="'doctype' parameter is required")
+    if not docname:
+        return generate_response("F", error="'docname' parameter is required")
+
     if not frappe.db.exists(doctype, docname):
         frappe.local.response.http_status_code = 404
         return generate_response("F", "404", error="{0} '{1}' not exist".format(doctype, docname))
@@ -68,7 +77,10 @@ def get_doc(doctype, docname):
 
 
 @ frappe.whitelist()
-def get_meta(doctype):
+def get_meta(doctype=None):
+    if not doctype:
+        return generate_response("F", error="'doctype' parameter is required")
+
     try:
         data = frappe.get_meta(doctype)
         generate_response("S", "200", message="Success", data=data)
@@ -78,7 +90,12 @@ def get_meta(doctype):
 
 
 @ frappe.whitelist()
-def get_doc_meta(doctype, docname):
+def get_doc_meta(doctype=None, docname=None):
+    if not doctype:
+        return generate_response("F", error="'doctype' parameter is required")
+    if not docname:
+        return generate_response("F", error="'docname' parameter is required")
+
     if not frappe.db.exists(doctype, docname):
         frappe.local.response.http_status_code = 404
         return generate_response("F", "404", error="{0} '{1}' not exist".format(doctype, docname))
@@ -92,7 +109,11 @@ def get_doc_meta(doctype, docname):
 
 
 @ frappe.whitelist()
-def update_doc(doc, doctype=None, docname=None, action="Save"):
+def update_doc(doc=None, doctype=None, docname=None, action="Save"):
+    if not doctype:
+        return generate_response("F", error="'doctype' parameter is required")
+    if not doc:
+        return generate_response("F", error="'doc' parameter is required")
     try:
         cur_doc = None
         status = None
@@ -121,7 +142,10 @@ def update_doc(doc, doctype=None, docname=None, action="Save"):
 
 
 @ frappe.whitelist()
-def get_all(doctype, fields=None, filters=None, order_by=None, group_by=None, start=None, page_length=None):
+def get_all(doctype=None, fields=None, filters=None, order_by=None, group_by=None, start=None, page_length=None):
+    if not doctype:
+        return generate_response("F", error="'doctype' parameter is required")
+
     try:
         if not fields:
             fields = ["*"]
@@ -148,7 +172,10 @@ def get_settings():
 
 
 @ frappe.whitelist(allow_guest=True)
-def get_item(docname):
+def get_item(docname=None):
+    if not docname:
+        return generate_response("F", error="'docname' parameter is required")
+
     if not frappe.db.exists("Item", docname):
         return generate_response("F", error="Item not exist")
     doc = frappe.get_doc("Item", docname)
@@ -156,7 +183,12 @@ def get_item(docname):
 
 
 @ frappe.whitelist()
-def get_pdf_file(doctype, docname):
+def get_pdf_file(doctype=None, docname=None):
+    if not doctype:
+        return generate_response("F", error="'doctype' parameter is required")
+    if not docname:
+        return generate_response("F", error="'docname' parameter is required")
+
     try:
         print_format = ""
         default_print_format = frappe.db.get_value('Property Setter', dict(
@@ -177,7 +209,13 @@ def get_pdf_file(doctype, docname):
 
 
 @ frappe.whitelist()
-def make_payment_si(docname, ref_type, ref_no, amount=None, power_data=None):
+def make_payment_si(docname=None, ref_type=None, ref_no=None, amount=None, power_data=None):
+    if not docname:
+        return generate_response("F", error="'docname' parameter is required")
+    if not ref_type:
+        return generate_response("F", error="'ref_type' parameter is required")
+    if not ref_no:
+        return generate_response("F", error="'ref_no' parameter is required")
     try:
         payment_doc = get_payment_entry(
             "Sales Invoice", docname)
@@ -327,7 +365,16 @@ def reset_pass(user):
 
 
 @ frappe.whitelist()
-def upload_image(doctype, docname, field_name, image):
+def upload_image(doctype=None, docname=None, field_name=None, image=None):
+    if not doctype:
+        return generate_response("F", error="'doctype' parameter is required")
+    if not docname:
+        return generate_response("F", error="'docname' parameter is required")
+    if not field_name:
+        return generate_response("F", error="'field_name' parameter is required")
+    if not image:
+        return generate_response("F", error="'image' parameter is required")
+
     try:
         exists = frappe.db.exists(doctype, docname)
         if not exists:

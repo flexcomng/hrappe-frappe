@@ -10,7 +10,11 @@ from erpnext.hr.doctype.leave_application.leave_application import get_leave_bal
 
 
 @frappe.whitelist()
-def get_leave_details(employee, date):
+def get_leave_details(employee=None, date=None):
+    if not employee:
+        return generate_response("F", error="'employee' parameter is required")
+    if not date:
+        return generate_response("F", error="'date' parameter is required")
     try:
         allocation_records = get_leave_allocation_records(employee, date)
         leave_allocation = {}
