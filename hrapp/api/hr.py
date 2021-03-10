@@ -68,7 +68,7 @@ def get_leave_details(employee=None, date=None):
 
 
 @ frappe.whitelist()
-def get_doc(doctype=None, docname=None):
+def get_doc(doctype=None, docname=None, fieldname=None):
     if not doctype:
         return generate_response("F", error="'doctype' parameter is required")
     if not docname:
@@ -80,8 +80,8 @@ def get_doc(doctype=None, docname=None):
             return generate_response("F", "404", error="{0} '{1}' not exist".format(doctype, docname))
         doc = frappe.get_doc(doctype, docname)
         employee = get_login_employee()
-
-        if doc.employee != employee:
+        field = 'employee' if not fieldname else fieldname
+        if doc.get(field) != employee:
             return generate_response("F", "403", error="Access denied")
         return generate_response("S", "200", message="Success", data=doc)
     except Exception as e:
