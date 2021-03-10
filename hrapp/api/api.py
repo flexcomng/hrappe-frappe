@@ -173,7 +173,7 @@ def get_all(doctype=None, fields=None, filters=None, order_by=None, group_by=Non
 @ frappe.whitelist(allow_guest=True)
 def get_settings():
     try:
-        doc = frappe.get_doc("HRapp Settings", "HRapp Settings")
+        doc = frappe.get_doc("Portal App Settings", "Portal App Settings")
         return generate_response("S", "200", message="Success", data=doc)
     except Exception as e:
         return generate_response("F", error=e)
