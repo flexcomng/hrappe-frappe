@@ -171,7 +171,7 @@ def get_all(doctype=None, fields=None, filters=None, order_by=None, group_by=Non
 
 
 @ frappe.whitelist(allow_guest=True)
-def get_settings():
+def get_portal_settings():
     try:
         doc = frappe.get_doc("Portal App Settings", "Portal App Settings")
         return generate_response("S", "200", message="Success", data=doc)
@@ -255,7 +255,7 @@ def make_payment_si(docname=None, ref_type=None, ref_no=None, amount=None, power
 
 
 def create_sales_invoice(customer, ammount, qty, ref_no):
-    settings = get_settings()
+    settings = get_portal_settings()
     sales_invoice = frappe.new_doc('Sales Invoice')
     sales_invoice.customer = customer
     sales_invoice.remarks = "Power Token: " + ref_no
