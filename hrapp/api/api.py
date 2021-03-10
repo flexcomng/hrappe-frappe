@@ -12,7 +12,7 @@ from frappe.utils.pdf import get_pdf
 from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry
 from frappe.utils import nowdate, getdate, cint, today
 import requests
-from hrapp.api.utlis import xml_to_dic, send_welcome_mail_to_user, reset_password, to_base64, add_image, delete_image
+from hrapp.api.utlis import xml_to_dic, send_welcome_mail_to_user, reset_password, to_base64, add_image, delete_image, generate_response
 from frappe.utils.password import update_password as _update_password
 
 
@@ -27,6 +27,7 @@ def login(usr, pwd):
             frappe.response['token'] = generate_key(login_manager.user)
     except Exception as e:
         return generate_response("F", error=e)
+
 
 def generate_key(user):
     """
@@ -45,32 +46,6 @@ def generate_key(user):
     api_kyes_base64 = to_base64(user_details.api_key+":"+user_details.api_key)
     token = "'Authorization': 'Basic {0}'".format(api_kyes_base64)
     return token
-
-
-@frappe.whitelist()
-def generate_response(_type, status=None, message=None, data=None, error=None):
-    if _type == "S":
-        if status:
-            frappe.response["status_code"] = int(status)
-        else:
-            frappe.response["status_code"] = 200
-        frappe.response["msg"] = message
-        frappe.response["data"] = data
-    else:
-        frappe.log_error(frappe.get_traceback())
-        if status:
-            frappe.response["status_code"] = status
-        else:
-            frappe.response["status_code"] = 500
-        if message:
-            frappe.response["msg"] = message
-        elif error:
-            frappe.response["msg"] = str(error)
-        else:
-            frappe.response["msg"] = "Something Went Wrong"
-        if error:
-            frappe.response["error"] = error
-        frappe.response["data"] = None
 
 
 @ frappe.whitelist()
@@ -140,9 +115,9 @@ def update_doc(doc, doctype=None, docname=None, action="Save"):
         if action == "Submit":
             cur_doc.submit()
         frappe.db.commit()
-        return generate_response("S", "200", message="{0}: '{1}' {2} Successfully".format(cur_doc.doctype,cur_doc.name,status), data=cur_doc)
+        return generate_response("S", "200", message="{0}: '{1}' {2} Successfully".format(cur_doc.doctype, cur_doc.name, status), data=cur_doc)
     except Exception as e:
-        return generate_response("F", error=e)  
+        return generate_response("F", error=e)
 
 
 @ frappe.whitelist()
@@ -156,15 +131,16 @@ def get_all(doctype, fields=None, filters=None, order_by=None, group_by=None, st
             filters = {}
         else:
             filters = json.loads(filters)
-        data = frappe.get_all(doctype, fields, filters, order_by, group_by, start, page_length)
+        data = frappe.get_all(doctype, fields, filters,
+                              order_by, group_by, start, page_length)
         return generate_response("S", "200", message="Success", data=data)
     except Exception as e:
-        return generate_response("F", error=e)  
+        return generate_response("F", error=e)
 
 
 @ frappe.whitelist(allow_guest=True)
 def get_settings():
-    try:    
+    try:
         doc = frappe.get_doc("HRapp Settings", "HRapp Settings")
         return generate_response("S", "200", message="Success", data=doc)
     except Exception as e:
@@ -174,7 +150,7 @@ def get_settings():
 @ frappe.whitelist(allow_guest=True)
 def get_item(docname):
     if not frappe.db.exists("Item", docname):
-        return generate_response("F", error="Item not exist")  
+        return generate_response("F", error="Item not exist")
     doc = frappe.get_doc("Item", docname)
     return generate_response("S", "200", message="Success", data=doc)
 
@@ -348,6 +324,7 @@ def reset_pass(user):
             return 'User not found'
     except Exception as e:
         return generate_response("F", error=e)
+
 
 @ frappe.whitelist()
 def upload_image(doctype, docname, field_name, image):

@@ -148,6 +148,32 @@ def send_welcome_mail_to_user(user):
                          ))
 
 
+@frappe.whitelist()
+def generate_response(_type, status=None, message=None, data=None, error=None):
+    if _type == "S":
+        if status:
+            frappe.response["status_code"] = int(status)
+        else:
+            frappe.response["status_code"] = 200
+        frappe.response["msg"] = message
+        frappe.response["data"] = data
+    else:
+        frappe.log_error(frappe.get_traceback())
+        if status:
+            frappe.response["status_code"] = status
+        else:
+            frappe.response["status_code"] = 500
+        if message:
+            frappe.response["msg"] = message
+        elif error:
+            frappe.response["msg"] = str(error)
+        else:
+            frappe.response["msg"] = "Something Went Wrong"
+        if error:
+            frappe.response["error"] = error
+        frappe.response["data"] = None
+
+
 def add_image(file, fieldname, doctype, docname, file_name=None):
     file_name = file_name or frappe.utils.random_string(20) + '.png'
     if "," in file:
