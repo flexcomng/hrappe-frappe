@@ -9,6 +9,14 @@ from hrapp.api.utlis import generate_response
 from erpnext.hr.doctype.leave_application.leave_application import get_leave_balance_on, get_leaves_for_period, get_pending_leaves_for_period, get_leave_allocation_records, get_leave_approver
 
 
+def get_login_employee():
+    user = str(frappe.session.user)
+    employees = frappe.get_all(
+        "Employee", filters={"user_id": user, "status": "Active"})
+    if len(employees) > 0:
+        return employees[0].name
+
+
 @frappe.whitelist()
 def get_leave_details(employee=None, date=None):
     if not employee:
@@ -55,5 +63,26 @@ def get_leave_details(employee=None, date=None):
         }
         generate_response("S", "200", message="Success", data=ret)
 
+    except Exception as e:
+        return generate_response("F", error=e)
+
+
+@ frappe.whitelist()
+def get_doc(doctype=None, docname=None):
+    if not doctype:
+        return generate_response("F", error="'doctype' parameter is required")
+    if not docname:
+        return generate_response("F", error="'docname' parameter is required")
+
+    try:
+        if not frappe.db.exists(doctype, docname):
+            frappe.local.response.http_status_code = 404
+            return generate_response("F", "404", error="{0} '{1}' not exist".format(doctype, docname))
+        doc = frappe.get_doc(doctype, docname)
+        employee = get_login_employee()
+
+        if doc.employee != employee:
+            return generate_response("F", "403", error="Access denied")
+        return generate_response("S", "200", message="Success", data=doc)
     except Exception as e:
         return generate_response("F", error=e)
