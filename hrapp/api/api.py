@@ -69,6 +69,9 @@ def get_doc(doctype=None, docname=None):
     if not docname:
         return generate_response("F", error="'docname' parameter is required")
 
+    if not frappe.has_permission(doctype, "read"):
+        return generate_response("F", "403", error="Access denied")
+
     if not frappe.db.exists(doctype, docname):
         frappe.local.response.http_status_code = 404
         return generate_response("F", "404", error="{0} '{1}' not exist".format(doctype, docname))
@@ -82,6 +85,8 @@ def get_meta(doctype=None):
         return generate_response("F", error="'doctype' parameter is required")
 
     try:
+        if not frappe.has_permission(doctype, "read"):
+            return generate_response("F", "403", error="Access denied")
         data = frappe.get_meta(doctype)
         generate_response("S", "200", message="Success", data=data)
     except Exception:
@@ -95,6 +100,9 @@ def get_doc_meta(doctype=None, docname=None):
         return generate_response("F", error="'doctype' parameter is required")
     if not docname:
         return generate_response("F", error="'docname' parameter is required")
+
+    if not frappe.has_permission(doctype, "read"):
+        return generate_response("F", "403", error="Access denied")
 
     if not frappe.db.exists(doctype, docname):
         frappe.local.response.http_status_code = 404

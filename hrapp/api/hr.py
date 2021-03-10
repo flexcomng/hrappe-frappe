@@ -17,6 +17,30 @@ def get_login_employee():
         return employees[0].name
 
 
+@ frappe.whitelist()
+def get_doc(doctype=None, docname=None, fieldname=None):
+    if not doctype:
+        return generate_response("F", error="'doctype' parameter is required")
+    if not docname:
+        return generate_response("F", error="'docname' parameter is required")
+
+    try:
+        if not frappe.has_permission(doctype, "read"):
+            return generate_response("F", "403", error="Access denied")
+
+        if not frappe.db.exists(doctype, docname):
+            frappe.local.response.http_status_code = 404
+            return generate_response("F", "404", error="{0} '{1}' not exist".format(doctype, docname))
+        doc = frappe.get_doc(doctype, docname)
+        employee = get_login_employee()
+        field = 'employee' if not fieldname else fieldname
+        if doc.get(field) != employee:
+            return generate_response("F", "403", error="Access denied")
+        return generate_response("S", "200", message="Success", data=doc)
+    except Exception as e:
+        return generate_response("F", error=e)
+
+
 @frappe.whitelist()
 def get_leave_details(employee=None, date=None):
     if not employee:
@@ -63,26 +87,5 @@ def get_leave_details(employee=None, date=None):
         }
         generate_response("S", "200", message="Success", data=ret)
 
-    except Exception as e:
-        return generate_response("F", error=e)
-
-
-@ frappe.whitelist()
-def get_doc(doctype=None, docname=None, fieldname=None):
-    if not doctype:
-        return generate_response("F", error="'doctype' parameter is required")
-    if not docname:
-        return generate_response("F", error="'docname' parameter is required")
-
-    try:
-        if not frappe.db.exists(doctype, docname):
-            frappe.local.response.http_status_code = 404
-            return generate_response("F", "404", error="{0} '{1}' not exist".format(doctype, docname))
-        doc = frappe.get_doc(doctype, docname)
-        employee = get_login_employee()
-        field = 'employee' if not fieldname else fieldname
-        if doc.get(field) != employee:
-            return generate_response("F", "403", error="Access denied")
-        return generate_response("S", "200", message="Success", data=doc)
     except Exception as e:
         return generate_response("F", error=e)
