@@ -26,8 +26,8 @@ def get_doc(doctype=None, docname=None, fieldname=None):
 
     try:
         if not frappe.has_permission(doctype, "read"):
+            frappe.local.response.http_status_code = 403
             return generate_response("F", "403", error="Access denied")
-
         if not frappe.db.exists(doctype, docname):
             frappe.local.response.http_status_code = 404
             return generate_response("F", "404", error="{0} '{1}' not exist".format(doctype, docname))
@@ -35,6 +35,7 @@ def get_doc(doctype=None, docname=None, fieldname=None):
         employee = get_login_employee()
         field = 'employee' if not fieldname else fieldname
         if doc.get(field) != employee:
+            frappe.local.response.http_status_code = 403
             return generate_response("F", "403", error="Access denied")
         return generate_response("S", "200", message="Success", data=doc)
     except Exception as e:
