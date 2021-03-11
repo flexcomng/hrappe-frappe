@@ -192,12 +192,20 @@ def get_item(docname=None):
 
 @ frappe.whitelist()
 def get_pdf_file(doctype=None, docname=None):
-    if not doctype:
-        return generate_response("F", error="'doctype' parameter is required")
-    if not docname:
-        return generate_response("F", error="'docname' parameter is required")
-
     try:
+        if not doctype:
+            frappe.local.response.http_status_code = 500
+            return generate_response("F", error="'doctype' parameter is required")
+        if not docname:
+            frappe.local.response.http_status_code = 500
+            return generate_response("F", error="'docname' parameter is required")
+        if not frappe.has_permission(doctype, "read"):
+            frappe.local.response.http_status_code = 403
+            return generate_response("F", "403", error="Access denied")
+        if not frappe.db.exists(doctype, docname):
+            frappe.local.response.http_status_code = 404
+            return generate_response("F", "404", error="{0} '{1}' not exist".format(doctype, docname))
+
         print_format = ""
         default_print_format = frappe.db.get_value('Property Setter', dict(
             property='default_print_format', doc_type=doctype), "value")
@@ -208,10 +216,14 @@ def get_pdf_file(doctype=None, docname=None):
 
         html = frappe.get_print(
             doctype, docname, print_format, doc=None, no_letterhead=0)
-        frappe.local.response.filename = "{name}.pdf".format(
+
+        frappe.response["status_code"] = 200
+        frappe.response["msg"] = "Success"
+        frappe.response.filename = "{name}.pdf".format(
             name=docname.replace(" ", "-").replace("/", "-"))
-        frappe.local.response.filecontent = get_pdf(html)
-        frappe.local.response.type = "pdf"
+        frappe.response.filecontent = get_pdf(html)
+        frappe.response.type = "pdf"
+    
     except Exception as e:
         return generate_response("F", error=e)
 
