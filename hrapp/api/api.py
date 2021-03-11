@@ -12,7 +12,7 @@ from frappe.utils.pdf import get_pdf
 from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry
 from frappe.utils import nowdate, getdate, cint, today
 import requests
-from hrapp.api.utlis import xml_to_dic, send_welcome_mail_to_user, reset_password, to_base64, add_image, delete_image, generate_response
+from hrapp.api.utlis import xml_to_dic, send_welcome_mail_to_user, reset_password, to_base64, add_image, delete_image, generate_response, portal_settings
 from frappe.utils.password import update_password as _update_password
 
 
@@ -173,7 +173,7 @@ def get_all(doctype=None, fields=None, filters=None, order_by=None, group_by=Non
 @ frappe.whitelist(allow_guest=True)
 def get_portal_settings():
     try:
-        doc = frappe.get_doc("Portal App Settings", "Portal App Settings")
+        doc = portal_settings()
         return generate_response("S", "200", message="Success", data=doc)
     except Exception as e:
         return generate_response("F", error=e)
@@ -255,7 +255,7 @@ def make_payment_si(docname=None, ref_type=None, ref_no=None, amount=None, power
 
 
 def create_sales_invoice(customer, ammount, qty, ref_no):
-    settings = get_portal_settings()
+    settings = portal_settings()
     sales_invoice = frappe.new_doc('Sales Invoice')
     sales_invoice.customer = customer
     sales_invoice.remarks = "Power Token: " + ref_no

@@ -5,9 +5,12 @@ from xml.etree import cElementTree as ElementTree
 from binascii import a2b_base64
 import base64
 
-settings = frappe.get_doc("HRapp Settings",
-                          "HRapp Settings")
 STANDARD_USERS = ("Guest", "Administrator")
+
+
+def portal_settings():
+    doc = frappe.get_doc("Portal App Settings", "Portal App Settings")
+    return doc
 
 
 def xml_to_dic(xml_string):
@@ -79,6 +82,7 @@ def get_generated_link_count(user):
 
 def reset_password(user, send_email=False, password_expired=False):
     from frappe.utils import random_string
+    settings = portal_settings()
 
     rate_limit = frappe.db.get_single_value(
         "System Settings", "password_reset_limit")
@@ -109,6 +113,7 @@ def password_reset_mail(user, link):
 def send_login_mail(user, subject, template, add_args, now=None):
     """send mail with login details"""
     from frappe.utils.user import get_user_fullname
+    settings = portal_settings()
 
     full_name = get_user_fullname(frappe.session['user'])
     if full_name == "Guest":
@@ -134,6 +139,7 @@ def send_login_mail(user, subject, template, add_args, now=None):
 
 def send_welcome_mail_to_user(user):
     link = reset_password(user)
+    settings = portal_settings()
     subject = None
     site_name = settings.portal_name
     if site_name:
