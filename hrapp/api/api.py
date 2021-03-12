@@ -170,6 +170,27 @@ def get_all(doctype=None, fields=None, filters=None, order_by=None, group_by=Non
         return generate_response("F", error=e)
 
 
+@ frappe.whitelist()
+def get_list(doctype=None, fields=None, filters=None, order_by=None, group_by=None, start=None, page_length=None):
+    if not doctype:
+        return generate_response("F", error="'doctype' parameter is required")
+
+    try:
+        if not fields:
+            fields = []
+        else:
+            fields = json.loads(fields)
+        if not filters:
+            filters = {}
+        else:
+            filters = json.loads(filters)
+        data = frappe.get_list(doctype, fields, filters,
+                              order_by, group_by, start, page_length)
+        return generate_response("S", "200", message="Success", data=data)
+    except Exception as e:
+        return generate_response("F", error=e)
+
+
 @ frappe.whitelist(allow_guest=True)
 def get_portal_settings():
     try:
