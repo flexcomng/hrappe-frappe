@@ -135,7 +135,9 @@ def get_training_results(employee):
                                  fields=[
                                      "parent as name", "parenttype as doctype", "employee", "employee_name", "department", "hours", "grade", "comments"]
                                  )
-
+        for item in results:
+            item["training_event"] = frappe.get_value(
+                "Training Result", item.name, "training_event")
         generate_response("S", "200", message="Success", data=results)
 
     except Exception as e:
