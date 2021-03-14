@@ -99,7 +99,8 @@ def get_training_events(employee):
     try:
         events = frappe.get_all("Training Event Employee",
                                 filters={
-                                    "employee": employee
+                                    "employee": employee,
+                                    "docstatus": 1
                                 },
                                 fields=["parent"]
                                 )
@@ -110,11 +111,32 @@ def get_training_events(employee):
 
         training_events = frappe.get_all("Training Event",
                                          filters={
-                                             "name": ["in", events_list]
+                                             "name": ["in", events_list],
+                                             "docstatus": 1
                                          },
                                          fields=["*"]
                                          )
         generate_response("S", "200", message="Success", data=training_events)
+
+    except Exception as e:
+        return generate_response("F", error=e)
+
+
+@frappe.whitelist()
+def get_training_results(employee):
+    if not employee:
+        return generate_response("F", error="'employee' parameter is required")
+    try:
+        results = frappe.get_all("Training Result Employee",
+                                 filters={
+                                     "employee": employee,
+                                     "docstatus": 1
+                                 },
+                                 fields=[
+                                     "parent as name", "parenttype as doctype", "employee", "employee_name", "department", "hours", "grade", "comments"]
+                                 )
+
+        generate_response("S", "200", message="Success", data=results)
 
     except Exception as e:
         return generate_response("F", error=e)
