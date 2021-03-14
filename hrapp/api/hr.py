@@ -90,3 +90,31 @@ def get_leave_details(employee=None, date=None):
 
     except Exception as e:
         return generate_response("F", error=e)
+
+
+@frappe.whitelist()
+def get_training_events(employee):
+    if not employee:
+        return generate_response("F", error="'employee' parameter is required")
+    try:
+        events = frappe.get_all("Training Event Employee",
+                                filters={
+                                    "employee": employee
+                                },
+                                fields=["parent"]
+                                )
+        events_list = []
+        for event in events:
+            if event.parent not in events_list:
+                events_list.append(event.parent)
+
+        training_events = frappe.get_all("Training Event",
+                                         filters={
+                                             "name": ["in", events_list]
+                                         },
+                                         fields=["*"]
+                                         )
+        generate_response("S", "200", message="Success", data=training_events)
+
+    except Exception as e:
+        return generate_response("F", error=e)
