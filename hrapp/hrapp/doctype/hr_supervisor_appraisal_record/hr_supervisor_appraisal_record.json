@@ -23,13 +23,15 @@
    "fieldname": "employee",
    "fieldtype": "Link",
    "label": "Employee",
-   "options": "Employee"
+   "options": "Employee",
+   "read_only": 1
   },
   {
    "fetch_from": "employee.employee_name",
    "fieldname": "employee_name",
    "fieldtype": "Read Only",
-   "label": "Employee Name"
+   "label": "Employee Name",
+   "read_only": 1
   },
   {
    "fetch_from": "employee.reports_to",
@@ -62,7 +64,8 @@
    "fieldname": "phase",
    "fieldtype": "Link",
    "label": "Appraisal Phase",
-   "options": "HR Appraisal Phase"
+   "options": "HR Appraisal Phase",
+   "read_only": 1
   },
   {
    "fetch_from": "phase.template",
@@ -96,7 +99,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-03-04 09:17:12.774486",
+ "modified": "2021-03-15 09:55:07.700152",
  "modified_by": "Administrator",
  "module": "HRapp",
  "name": "HR Supervisor Appraisal Record",

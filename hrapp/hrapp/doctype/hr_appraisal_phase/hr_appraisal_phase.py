@@ -46,3 +46,12 @@ class HRAppraisalPhase(Document):
                 doc.save(ignore_permissions=True)
                 frappe.msgprint(
                     _("New Appraisal is created for meployee {0}").format(emp.name), alert=True)
+            elif self.appraisal_type == "Supervisors":
+                doc = frappe.new_doc("HR Supervisor Appraisal Record")
+                doc.employee = emp.name
+                doc.phase = self.name
+                doc.template = self.template
+                doc.save(ignore_permissions=True)
+                doc.submit()
+                frappe.msgprint(
+                    _("New Appraisal is created for meployee {0}").format(emp.name), alert=True)

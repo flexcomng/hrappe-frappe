@@ -10,6 +10,7 @@
   "employee",
   "employee_name",
   "manager",
+  "appraisal_status",
   "column_break_3",
   "posting_date",
   "phase",
@@ -341,12 +342,19 @@
    "fieldtype": "Date",
    "label": "End Date",
    "read_only": 1
+  },
+  {
+   "default": "Pending",
+   "fieldname": "appraisal_status",
+   "fieldtype": "Select",
+   "label": "Appraisal Status",
+   "options": "Pending\nAwaiting Manager's Review\nAwaiting Panel Review\nCompleted"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-03-04 09:22:04.713377",
+ "modified": "2021-03-14 21:01:58.431299",
  "modified_by": "Administrator",
  "module": "HRapp",
  "name": "HR Employee Appraisal",

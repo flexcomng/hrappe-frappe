@@ -84,19 +84,21 @@ def get_doc(doctype=None, docname=None):
 def new_doc(doctype=None):
     if not doctype:
         return generate_response("F", error="'doctype' parameter is required")
+    try:
+        if not frappe.has_permission(doctype, "read"):
+            frappe.local.response.http_status_code = 403
+            return generate_response("F", "403", error="Access denied")
 
-    if not frappe.has_permission(doctype, "read"):
-        frappe.local.response.http_status_code = 403
-        return generate_response("F", "403", error="Access denied")
-
-    doc_dict = frappe.new_doc(doctype, as_dict=True)
-    doc = frappe.new_doc(doctype, as_dict=False)
-    meta = frappe.get_meta(doctype).fields
-    for df in meta:
-        if not doc_dict.get(df.fieldname):
-            doc_dict[df.fieldname] = ""
-    doc.update(doc_dict)
-    return generate_response("S", "200", message="Success", data=doc)
+        doc_dict = frappe.new_doc(doctype, as_dict=True)
+        doc = frappe.new_doc(doctype, as_dict=False)
+        meta = frappe.get_meta(doctype).fields
+        for df in meta:
+            if not doc_dict.get(df.fieldname):
+                doc_dict[df.fieldname] = ""
+        doc.update(doc_dict)
+        return generate_response("S", "200", message="Success", data=doc)
+    except Exception as e:
+        return generate_response("F", error=e)
 
 
 @ frappe.whitelist()
