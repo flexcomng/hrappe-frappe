@@ -32,7 +32,8 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Employee Rating",
-   "options": "\n1\n2\n3\n4\n5"
+   "options": "\n1\n2\n3\n4\n5",
+   "reqd": 1
   },
   {
    "fieldname": "employee_comment",
@@ -44,7 +45,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2021-03-04 09:25:15.268558",
+ "modified": "2021-03-15 14:22:35.979448",
  "modified_by": "Administrator",
  "module": "HRapp",
  "name": "HR Supervisor Appraisal Job Details",
