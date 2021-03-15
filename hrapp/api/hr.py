@@ -5,6 +5,7 @@
 from __future__ import unicode_literals
 import frappe
 from frappe import _
+from frappe.utils import nowdate
 from hrapp.api.utlis import generate_response
 from erpnext.hr.doctype.leave_application.leave_application import get_leave_balance_on, get_leaves_for_period, get_pending_leaves_for_period, get_leave_allocation_records, get_leave_approver
 
@@ -139,6 +140,38 @@ def get_training_results(employee):
             item["training_event"] = frappe.get_value(
                 "Training Result", item.name, "training_event")
         generate_response("S", "200", message="Success", data=results)
+
+    except Exception as e:
+        return generate_response("F", error=e)
+
+
+@frappe.whitelist()
+def get_supervisor_appraisal(docname):
+    if not docname:
+        return generate_response("F", error="'docname' parameter is required")
+    try:
+        record_doc = frappe.get_doc("HR Supervisor Appraisal Record", docname)
+        if record_doc.done:
+            return generate_response("F", error="Appraisal '{0}' is done")
+        doc = frappe.new_doc("HR Supervisor Appraisal")
+        template = frappe.get_doc("HR Appraisal Template", record_doc.template)
+        for el in template.jobs:
+            row = doc.append('jobs', {})
+            row.title = el.title
+            row.description = el.description
+        for el in template.performances:
+            row = doc.append('performances', {})
+            row.title = el.title
+            row.description = el.description
+        doc.supervisor = record_doc.supervisor
+        doc.supervisor_name = frappe.get_value(
+            "Employee", record_doc.supervisor, "employee_name")
+        doc.posting_date = nowdate()
+        doc.phase = record_doc.phase
+        doc.end_date = record_doc.end_date
+        doc.template = record_doc.template
+
+        generate_response("S", "200", message="Success", data=doc)
 
     except Exception as e:
         return generate_response("F", error=e)
