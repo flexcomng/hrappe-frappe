@@ -94,7 +94,7 @@ def get_leave_details(employee=None, date=None):
 
 
 @frappe.whitelist()
-def get_training_events(employee):
+def get_training_events(employee=None):
     if not employee:
         return generate_response("F", error="'employee' parameter is required")
     try:
@@ -124,7 +124,7 @@ def get_training_events(employee):
 
 
 @frappe.whitelist()
-def get_training_results(employee):
+def get_training_results(employee=None):
     if not employee:
         return generate_response("F", error="'employee' parameter is required")
     try:
@@ -146,13 +146,13 @@ def get_training_results(employee):
 
 
 @frappe.whitelist()
-def get_supervisor_appraisal(docname):
+def get_supervisor_appraisal(docname=None):
     if not docname:
         return generate_response("F", error="'docname' parameter is required")
     try:
         record_doc = frappe.get_doc("HR Supervisor Appraisal Record", docname)
         if record_doc.done:
-            return generate_response("F", error="Appraisal '{0}' is done")
+            return generate_response("F", error="Appraisal '{0}' is done".format(docname))
         doc = frappe.new_doc("HR Supervisor Appraisal")
         template = frappe.get_doc("HR Appraisal Template", record_doc.template)
         for el in template.jobs:
@@ -170,8 +170,37 @@ def get_supervisor_appraisal(docname):
         doc.phase = record_doc.phase
         doc.end_date = record_doc.end_date
         doc.template = record_doc.template
+        doc.owner = None
 
         generate_response("S", "200", message="Success", data=doc)
 
+    except Exception as e:
+        return generate_response("F", error=e)
+
+
+@frappe.whitelist()
+def submit_supervisor_appraisal(doc=None, record_name=None):
+    if not doc:
+        return generate_response("F", error="'doc' parameter is required")
+    if not record_name:
+        return generate_response("F", error="'record_name' parameter is required")
+    try:
+        record_doc = frappe.get_doc(
+            "HR Supervisor Appraisal Record", record_name)
+        if record_doc.done:
+            return generate_response("F", error="Appraisal '{0}' is done".format(record_name))
+        else:
+            cur_doc = frappe.new_doc("HR Supervisor Appraisal")
+            cur_doc.flags.ignore_permissions = True
+            doc["owner"] = "Administrator"
+            cur_doc.update(doc)
+            cur_doc.save(ignore_permissions=True)
+            cur_doc.submit()
+            frappe.db.sql(
+                """update `tabHR Supervisor Appraisal` set modified_by = "Administrator" where name = %s""", cur_doc.name)
+            record_doc.done = 1
+            record_doc.save(ignore_permissions=True)
+            frappe.db.commit()
+            return generate_response("S", "200", message="{0}: '{1}' {2} Successfully".format(cur_doc.doctype, cur_doc.name, "Created"), data=cur_doc)
     except Exception as e:
         return generate_response("F", error=e)
