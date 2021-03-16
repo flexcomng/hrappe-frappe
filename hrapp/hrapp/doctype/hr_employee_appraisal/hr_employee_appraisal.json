@@ -144,12 +144,14 @@
   {
    "fieldname": "jobs_employee_comments",
    "fieldtype": "Small Text",
-   "label": "Employee Comments"
+   "label": "Employee Comments",
+   "read_only": 1
   },
   {
    "fieldname": "jobs_manager_comment",
    "fieldtype": "Small Text",
-   "label": "Manager Comment"
+   "label": "Manager Comment",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_13",
@@ -159,12 +161,14 @@
   {
    "fieldname": "employee_comment",
    "fieldtype": "Small Text",
-   "label": "Employee Comment"
+   "label": "Employee Comment",
+   "read_only": 1
   },
   {
    "fieldname": "manager_comment",
    "fieldtype": "Small Text",
-   "label": "Manager Comment"
+   "label": "Manager Comment",
+   "read_only": 1
   },
   {
    "fieldname": "overall_rating_section",
@@ -336,7 +340,8 @@
   {
    "fieldname": "recommendation",
    "fieldtype": "Small Text",
-   "label": "Recommendation"
+   "label": "Recommendation",
+   "read_only": 1
   },
   {
    "fetch_from": "phase.end_date",
@@ -355,20 +360,24 @@
   {
    "fetch_from": "employee.user_id",
    "fieldname": "emp_user",
-   "fieldtype": "Read Only",
-   "label": "emp_user"
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "emp_user",
+   "read_only": 1
   },
   {
    "fetch_from": "manager.user_id",
    "fieldname": "man_user",
-   "fieldtype": "Read Only",
-   "label": "man_user"
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "man_user",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-03-16 12:54:32.913547",
+ "modified": "2021-03-16 20:54:51.100661",
  "modified_by": "Administrator",
  "module": "HRapp",
  "name": "HR Employee Appraisal",

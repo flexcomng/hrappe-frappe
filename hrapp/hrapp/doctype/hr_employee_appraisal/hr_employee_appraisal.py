@@ -70,7 +70,7 @@ class HREmployeeAppraisal(Document):
         template = frappe.get_doc("HR Appraisal Template", self.template)
         temp_jobs_count = len(template.jobs)
         jobs_count = len(self.jobs)
-        temp_performances_count = len(template.joperformancesbs)
+        temp_performances_count = len(template.performances)
         performances_count = len(self.performances)
         if temp_jobs_count != jobs_count:
             frappe.throw(
