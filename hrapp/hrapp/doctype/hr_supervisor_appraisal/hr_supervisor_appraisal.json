@@ -90,7 +90,8 @@
    "fieldname": "jobs",
    "fieldtype": "Table",
    "label": "Supervisor Appraisal Job Details",
-   "options": "HR Supervisor Appraisal Job Details"
+   "options": "HR Supervisor Appraisal Job Details",
+   "read_only": 1
   },
   {
    "fieldname": "general_performance_requirements_section",
@@ -101,7 +102,8 @@
    "fieldname": "performances",
    "fieldtype": "Table",
    "label": "Supervisor Appraisal Performance Details",
-   "options": "HR Supervisor Appraisal Performance Details"
+   "options": "HR Supervisor Appraisal Performance Details",
+   "read_only": 1
   },
   {
    "fieldname": "amended_from",
@@ -161,7 +163,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-03-04 10:22:52.586669",
+ "modified": "2021-03-15 15:10:29.335610",
  "modified_by": "Administrator",
  "module": "HRapp",
  "name": "HR Supervisor Appraisal",

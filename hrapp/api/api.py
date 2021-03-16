@@ -179,12 +179,8 @@ def get_all(doctype=None, fields=None, filters=None, order_by=None, group_by=Non
     try:
         if not fields:
             fields = ["*"]
-        else:
-            fields = json.loads(fields)
         if not filters:
             filters = {}
-        else:
-            filters = json.loads(filters)
         data = frappe.get_all(doctype, fields, filters,
                               order_by, group_by, start, page_length)
         return generate_response("S", "200", message="Success", data=data)
@@ -200,12 +196,8 @@ def get_list(doctype=None, fields=None, filters=None, order_by=None, group_by=No
     try:
         if not fields:
             fields = []
-        else:
-            fields = json.loads(fields)
         if not filters:
             filters = {}
-        else:
-            filters = json.loads(filters)
         data = frappe.get_list(doctype, fields, filters,
                                order_by, group_by, start, page_length)
         return generate_response("S", "200", message="Success", data=data)

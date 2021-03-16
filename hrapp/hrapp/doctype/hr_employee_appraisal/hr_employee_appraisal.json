@@ -8,8 +8,10 @@
  "engine": "InnoDB",
  "field_order": [
   "employee",
+  "emp_user",
   "employee_name",
   "manager",
+  "man_user",
   "appraisal_status",
   "column_break_3",
   "posting_date",
@@ -349,12 +351,24 @@
    "fieldtype": "Select",
    "label": "Appraisal Status",
    "options": "Pending\nAwaiting Manager's Review\nAwaiting Panel Review\nCompleted"
+  },
+  {
+   "fetch_from": "employee.user_id",
+   "fieldname": "emp_user",
+   "fieldtype": "Read Only",
+   "label": "emp_user"
+  },
+  {
+   "fetch_from": "manager.user_id",
+   "fieldname": "man_user",
+   "fieldtype": "Read Only",
+   "label": "man_user"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-03-14 21:01:58.431299",
+ "modified": "2021-03-15 21:49:28.518785",
  "modified_by": "Administrator",
  "module": "HRapp",
  "name": "HR Employee Appraisal",
@@ -409,10 +423,20 @@
   {
    "create": 1,
    "email": 1,
-   "if_owner": 1,
    "read": 1,
    "role": "Employee",
-   "select": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Panelist",
+   "share": 1,
    "write": 1
   }
  ],
