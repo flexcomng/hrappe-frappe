@@ -4,6 +4,7 @@
 
 from __future__ import unicode_literals
 import frappe
+from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt
 
@@ -24,6 +25,7 @@ class HREmployeeAppraisal(Document):
 
     def validate(self):
         self.set_totals()
+        self.validate_edit()
 
     def set_totals(self):
         jobs_count = len(self.jobs)
@@ -63,3 +65,16 @@ class HREmployeeAppraisal(Document):
         self.panelist_total = self.panelist_job_total + self.panelist_performance_total
         self.panelist_average = (
             self.panelist_job_average + self.panelist_performance_average) / 2
+
+    def validate_edit(self):
+        template = frappe.get_doc("HR Appraisal Template", self.template)
+        temp_jobs_count = len(template.jobs)
+        jobs_count = len(self.jobs)
+        temp_performances_count = len(template.joperformancesbs)
+        performances_count = len(self.performances)
+        if temp_jobs_count != jobs_count:
+            frappe.throw(
+                _("Appraisal Job Details shshould not be added or deleted from any lines"))
+        if temp_performances_count != performances_count:
+            frappe.throw(
+                _("Appraisal Performance Details shshould not be added or deleted from any lines"))

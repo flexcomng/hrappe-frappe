@@ -118,8 +118,7 @@
    "fieldname": "jobs",
    "fieldtype": "Table",
    "label": "Appraisal Job Details",
-   "options": "HR Employee Appraisal Job Details",
-   "read_only": 1
+   "options": "HR Employee Appraisal Job Details"
   },
   {
    "fieldname": "general_performance_requirements_section",
@@ -130,8 +129,7 @@
    "fieldname": "performances",
    "fieldtype": "Table",
    "label": "Appraisal Performance Details",
-   "options": "HR Employee Appraisal Performance Details",
-   "read_only": 1
+   "options": "HR Employee Appraisal Performance Details"
   },
   {
    "fetch_from": "employee.reports_to",
@@ -370,7 +368,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-03-16 12:24:18.440069",
+ "modified": "2021-03-16 12:54:32.913547",
  "modified_by": "Administrator",
  "module": "HRapp",
  "name": "HR Employee Appraisal",
