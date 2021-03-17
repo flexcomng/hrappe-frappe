@@ -148,14 +148,16 @@ fixtures = [
 
     )]]},
     {"doctype": "Property Setter", "filters": [["name", "in", (
-
+        
     )]]},
     {"doctype": "Custom DocPerm", "filters": [["name", "in", (
-
+        "acc1d831e9",
+        "c91fbba028",
+        "a2a3bf0a48",
+        "f5531816ad"
     )]]},
 
     {"doctype": "Desk Page", "filters": [["name", "in", (
-
+        "HR",
     )]]},
-
 ]
