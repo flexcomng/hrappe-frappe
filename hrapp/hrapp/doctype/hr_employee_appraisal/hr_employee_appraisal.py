@@ -24,8 +24,13 @@ class HREmployeeAppraisal(Document):
             row.description = el.description
 
     def validate(self):
-        self.set_totals()
         self.validate_edit()
+        self.validate_ratings()
+        self.set_totals()
+
+    def before_submit(self):
+        if self.appraisal_status != "Completed":
+            frappe.throw(_("Appraisal must be completed before submitting"))
 
     def set_totals(self):
         jobs_count = len(self.jobs)
@@ -74,7 +79,35 @@ class HREmployeeAppraisal(Document):
         performances_count = len(self.performances)
         if temp_jobs_count != jobs_count:
             frappe.throw(
-                _("Appraisal Job Details shshould not be added or deleted from any lines"))
+                _("Appraisal Job Details should not be added or deleted from any lines"))
         if temp_performances_count != performances_count:
             frappe.throw(
-                _("Appraisal Performance Details shshould not be added or deleted from any lines"))
+                _("Appraisal Performance Details should not be added or deleted from any lines"))
+
+    def validate_ratings(self):
+        if self.appraisal_status == "Awaiting Manager's Review":
+            self.validate_rating_field("employee_rating")
+        if self.appraisal_status == "Awaiting Panel Review":
+            self.validate_rating_field("employee_rating")
+            self.validate_rating_field("manager_rating")
+        if self.appraisal_status == "Completed":
+            self.validate_rating_field("employee_rating")
+            self.validate_rating_field("manager_rating")
+            self.validate_rating_field("panelist_rating")
+
+    def validate_rating_field(self, field):
+        jobs_values_count = 0
+        jobs_count = len(self.jobs)
+        for e in self.jobs:
+            if e.get(field):
+                jobs_values_count += 1
+        if jobs_values_count != jobs_count:
+            frappe.throw(_("All ratings fields are mandatory"))
+
+        performances_values_count = 0
+        performances_count = len(self.performances)
+        for c in self.performances:
+            if c.get(field):
+                performances_values_count += 1
+        if performances_values_count != performances_count:
+            frappe.throw(_("All ratings fields are mandatory"))

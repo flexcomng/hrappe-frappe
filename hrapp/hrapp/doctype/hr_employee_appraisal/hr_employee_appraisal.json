@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_copy": 1,
  "allow_import": 1,
  "autoname": "HEA-.YY.-.######",
  "creation": "2021-03-02 10:28:10.241742",
@@ -354,8 +355,12 @@
    "default": "Pending",
    "fieldname": "appraisal_status",
    "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
    "label": "Appraisal Status",
-   "options": "Pending\nAwaiting Manager's Review\nAwaiting Panel Review\nCompleted"
+   "options": "Pending\nAwaiting Manager's Review\nAwaiting Panel Review\nCompleted",
+   "read_only": 1
   },
   {
    "fetch_from": "employee.user_id",
@@ -377,7 +382,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-03-16 20:54:51.100661",
+ "modified": "2021-03-17 10:17:23.950300",
  "modified_by": "Administrator",
  "module": "HRapp",
  "name": "HR Employee Appraisal",
