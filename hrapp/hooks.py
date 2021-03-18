@@ -160,4 +160,8 @@ fixtures = [
     {"doctype": "Desk Page", "filters": [["name", "in", (
         "HR",
     )]]},
+
+    {"doctype": "Role", "filters": [["name", "in", (
+        "Panelist",
+    )]]},
 ]
