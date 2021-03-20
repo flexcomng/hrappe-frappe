@@ -387,6 +387,7 @@ def update_password(new_password):
 
         frappe.db.set_value("User", user, "last_password_reset_date", today())
         frappe.db.set_value("User", user, "reset_password_key", "")
+        return generate_response("S", "200", message="Success")
     except Exception as e:
         return generate_response("F", error=e)
 
