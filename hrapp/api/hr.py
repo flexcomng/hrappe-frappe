@@ -163,6 +163,10 @@ def get_supervisor_appraisal(docname=None):
             row = doc.append('performances', {})
             row.title = el.title
             row.description = el.description
+        for el in template.form:
+            row = doc.append('form', {})
+            row.description = el.description
+            row.employee_comment = ""
         doc.supervisor = record_doc.supervisor
         doc.supervisor_name = frappe.get_value(
             "Employee", record_doc.supervisor, "employee_name")

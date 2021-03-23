@@ -12,7 +12,9 @@
   "section_break_3",
   "jobs",
   "section_break_5",
-  "performances"
+  "performances",
+  "section_break_7",
+  "form"
  ],
  "fields": [
   {
@@ -48,11 +50,22 @@
    "label": "General Performance Requirements",
    "options": "HR Appraisal Template Details",
    "reqd": 1
+  },
+  {
+   "fieldname": "section_break_7",
+   "fieldtype": "Section Break"
+  },
+  {
+   "description": "Only For Supervisor Appraisal",
+   "fieldname": "form",
+   "fieldtype": "Table",
+   "label": "Anonymous Form",
+   "options": "HR Appraisal Template Form"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-03-03 13:41:43.027801",
+ "modified": "2021-03-23 14:47:03.070046",
  "modified_by": "Administrator",
  "module": "HRapp",
  "name": "HR Appraisal Template",
