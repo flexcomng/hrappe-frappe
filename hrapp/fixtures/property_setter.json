@@ -1,1 +1,19 @@
-[]
+[
+  {
+    "default_value": null,
+    "doc_type": "User",
+    "docstatus": 0,
+    "doctype": "Property Setter",
+    "doctype_or_field": "DocField",
+    "field_name": "send_welcome_email",
+    "modified": "2021-02-01 04:22:46.666057",
+    "name": "User-send_welcome_email-default",
+    "parent": null,
+    "parentfield": null,
+    "parenttype": null,
+    "property": "default",
+    "property_type": "Text",
+    "row_name": null,
+    "value": "0"
+  }
+]

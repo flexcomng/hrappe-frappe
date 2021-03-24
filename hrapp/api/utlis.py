@@ -129,8 +129,10 @@ def send_login_mail(user, subject, template, add_args, now=None):
 
     args.update(add_args)
 
-    sender = frappe.session.user not in STANDARD_USERS and get_formatted_email(
-        frappe.session.user) or None
+    sender = frappe.get_value("Email Account", settings.email, "email_id")
+    if not sender:
+        sender = frappe.session.user not in STANDARD_USERS and get_formatted_email(
+            frappe.session.user) or None
 
     frappe.sendmail(recipients=user.email, sender=sender, subject=subject,
                     template=template, args=args, header=[subject, "green"],
@@ -138,8 +140,8 @@ def send_login_mail(user, subject, template, add_args, now=None):
 
 
 def send_welcome_mail_to_user(user):
-    link = reset_password(user)
     settings = portal_settings()
+    link = reset_password(user)
     subject = None
     site_name = settings.portal_name
     if site_name:
@@ -147,11 +149,11 @@ def send_welcome_mail_to_user(user):
     else:
         subject = _("Complete Registration")
 
-    user.send_login_mail(subject, "new_user",
-                         dict(
-                             link=link,
-                             site_url=settings.portal_url,
-                         ))
+    send_login_mail(user, subject, "new_user",
+                    dict(
+                        link=link,
+                        site_url=settings.portal_url,
+                    ))
 
 
 @frappe.whitelist()

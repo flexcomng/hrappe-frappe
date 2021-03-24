@@ -91,13 +91,11 @@ app_license = "MIT"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-#	}
-# }
+doc_events = {
+    "User": {
+        "after_insert": "hrapp.api.api.send_welcome_mail",
+    }
+}
 
 # Scheduled Tasks
 # ---------------
@@ -145,10 +143,10 @@ app_license = "MIT"
 
 fixtures = [
     {"doctype": "Custom Field", "filters": [["name", "in", (
-
+        "User-send_emp_welcome_email",
     )]]},
     {"doctype": "Property Setter", "filters": [["name", "in", (
-        
+        "User-send_welcome_email-default",
     )]]},
     {"doctype": "Custom DocPerm", "filters": [["name", "in", (
         "acc1d831e9",

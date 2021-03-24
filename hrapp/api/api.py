@@ -393,7 +393,7 @@ def update_password(new_password):
 
 
 def send_welcome_mail(doc, method):
-    if doc.is_new and doc.send_cust_welcome_email:
+    if doc.is_new and doc.send_emp_welcome_email:
         send_welcome_mail_to_user(doc)
 
 
