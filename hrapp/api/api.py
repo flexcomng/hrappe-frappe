@@ -140,11 +140,11 @@ def get_doc_meta(doctype=None, docname=None):
 
 @ frappe.whitelist()
 def update_doc(doc=None, doctype=None, docname=None, action="Save"):
-    if not doctype:
-        return generate_response("F", error="'doctype' parameter is required")
-    if not doc:
-        return generate_response("F", error="'doc' parameter is required")
     try:
+        if not doctype:
+            frappe.throw("'doctype' parameter is required")
+        if not doc:
+            frappe.throw("'doc' parameter is required")
         cur_doc = None
         status = None
         if not doc.get("doctype") and doctype:
@@ -165,7 +165,7 @@ def update_doc(doc=None, doctype=None, docname=None, action="Save"):
         cur_doc.save(ignore_permissions=True)
         if action == "Submit":
             cur_doc.submit()
-        frappe.db.commit()
+
         return generate_response("S", "200", message="{0}: '{1}' {2} Successfully".format(cur_doc.doctype, cur_doc.name, status), data=cur_doc)
     except Exception as e:
         return generate_response("F", error=e)
