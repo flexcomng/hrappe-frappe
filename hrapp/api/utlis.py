@@ -20,7 +20,7 @@ def xml_to_dic(xml_string):
 
 
 class XmlDictConfig(dict):
-    '''
+    """
     Example usage:
     >>> tree = ElementTree.parse('your_file.xml')
     >>> root = tree.getroot()
@@ -29,7 +29,7 @@ class XmlDictConfig(dict):
     >>> root = ElementTree.XML(xml_string)
     >>> xmldict = XmlDictConfig(root)
     And then use xmldict for what it is... a dict.
-    '''
+    """
 
     def __init__(self, parent_element):
         if parent_element.items():
@@ -73,7 +73,10 @@ def check_password_reset_limit(user, rate_limit):
     generated_link_count = get_generated_link_count(user)
     if generated_link_count >= rate_limit:
         frappe.throw(
-            _("You have reached the hourly limit for generating password reset links. Please try again later."))
+            _(
+                "You have reached the hourly limit for generating password reset links. Please try again later."
+            )
+        )
 
 
 def get_generated_link_count(user):
@@ -82,10 +85,10 @@ def get_generated_link_count(user):
 
 def reset_password(user, send_email=False, password_expired=False):
     from frappe.utils import random_string
+
     settings = portal_settings()
 
-    rate_limit = frappe.db.get_single_value(
-        "System Settings", "password_reset_limit")
+    rate_limit = frappe.db.get_single_value("System Settings", "password_reset_limit")
 
     if rate_limit:
         check_password_reset_limit(user.name, rate_limit)
@@ -95,7 +98,7 @@ def reset_password(user, send_email=False, password_expired=False):
 
         url = "/update-password?key=" + key
         if password_expired:
-            url = "/update-password?key=" + key + '&password_expired=true'
+            url = "/update-password?key=" + key + "&password_expired=true"
 
         link = settings.portal_url + url
         if send_email:
@@ -106,37 +109,49 @@ def reset_password(user, send_email=False, password_expired=False):
 
 
 def password_reset_mail(user, link):
-    send_login_mail(user, _("Password Reset"),
-                    "password_reset", {"link": link}, now=True)
+    send_login_mail(
+        user, _("Password Reset"), "password_reset", {"link": link}, now=True
+    )
 
 
 def send_login_mail(user, subject, template, add_args, now=None):
     """send mail with login details"""
     from frappe.utils.user import get_user_fullname
+
     settings = portal_settings()
 
-    full_name = get_user_fullname(frappe.session['user'])
+    full_name = get_user_fullname(frappe.session["user"])
     if full_name == "Guest":
         full_name = "Administrator"
 
     args = {
-        'first_name': user.first_name or user.last_name or "user",
-        'user': user.name,
-        'title': subject,
-        'login_url': settings.portal_url+"/login",
-        'user_fullname': full_name
+        "first_name": user.first_name or user.last_name or "user",
+        "user": user.name,
+        "title": subject,
+        "login_url": settings.portal_url + "/login",
+        "user_fullname": full_name,
     }
 
     args.update(add_args)
 
     sender = frappe.get_value("Email Account", settings.email, "email_id")
     if not sender:
-        sender = frappe.session.user not in STANDARD_USERS and get_formatted_email(
-            frappe.session.user) or None
+        sender = (
+            frappe.session.user not in STANDARD_USERS
+            and get_formatted_email(frappe.session.user)
+            or None
+        )
 
-    frappe.sendmail(recipients=user.email, sender=sender, subject=subject,
-                    template=template, args=args, header=[subject, "green"],
-                    delayed=(not now) if now != None else user.flags.delay_emails, retry=3)
+    frappe.sendmail(
+        recipients=user.email,
+        sender=sender,
+        subject=subject,
+        template=template,
+        args=args,
+        header=[subject, "green"],
+        delayed=(not now) if now != None else user.flags.delay_emails,
+        retry=3,
+    )
 
 
 def send_welcome_mail_to_user(user):
@@ -149,11 +164,15 @@ def send_welcome_mail_to_user(user):
     else:
         subject = _("Complete Registration")
 
-    send_login_mail(user, subject, "new_user",
-                    dict(
-                        link=link,
-                        site_url=settings.portal_url,
-                    ))
+    send_login_mail(
+        user,
+        subject,
+        "new_user",
+        dict(
+            link=link,
+            site_url=settings.portal_url,
+        ),
+    )
 
 
 @frappe.whitelist()
@@ -182,27 +201,29 @@ def generate_response(_type, status=None, message=None, data=None, error=None):
         frappe.response["data"] = None
 
 
-def add_image(file, fieldname, doctype, docname, file_name=None):
-    file_name = file_name or frappe.utils.random_string(20) + '.png'
+def add_file(file, fieldname, doctype, docname, file_name=None):
+    file_name = file_name or frappe.utils.random_string(20) + ".png"
     if "," in file:
         file = file.split(",")[1]
-    ret = frappe.get_doc({
-        "doctype": "File",
-        "attached_to_doctype": doctype,
-        "attached_to_name": docname,
-        "attached_to_field": fieldname,
-        "folder": 'Home',
-        "file_name": file_name,
-        "file_url": '/files/' + file_name,
-        "is_private": 0,
-        "content": a2b_base64(file)
-    })
+    ret = frappe.get_doc(
+        {
+            "doctype": "File",
+            "attached_to_doctype": doctype,
+            "attached_to_name": docname,
+            "attached_to_field": fieldname,
+            "folder": "Home",
+            "file_name": file_name,
+            "file_url": "/files/" + file_name,
+            "is_private": 0,
+            "content": a2b_base64(file),
+        }
+    )
     ret.save(ignore_permissions=True)
     return ret.file_url
 
 
 def to_base64(value):
-    data_bytes = value.encode('ascii')
+    data_bytes = value.encode("ascii")
     data = base64.b64encode(data_bytes)
     return str(data)[2:-1]
 
@@ -211,10 +232,11 @@ def delete_image(doctype, docname, field_name):
     img_link = frappe.get_value(doctype, docname, field_name)
     if img_link:
         image_list = frappe.get_all(
-            'File', filters={'file_name': img_link.split('/')[-1]})
+            "File", filters={"file_name": img_link.split("/")[-1]}
+        )
         if len(image_list) > 0:
             image = image_list[0]
-            frappe.delete_doc('File', image.name)
+            frappe.delete_doc("File", image.name)
             frappe.db.commit()
             return True
     return False
