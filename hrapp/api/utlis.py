@@ -228,7 +228,7 @@ def to_base64(value):
     return str(data)[2:-1]
 
 
-def delete_image(doctype, docname, field_name):
+def delete_file(doctype, docname, field_name):
     img_link = frappe.get_value(doctype, docname, field_name)
     if img_link:
         image_list = frappe.get_all(

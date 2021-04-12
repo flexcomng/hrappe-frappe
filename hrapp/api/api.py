@@ -18,7 +18,7 @@ from hrapp.api.utlis import (
     reset_password,
     to_base64,
     add_file,
-    delete_image,
+    delete_file,
     generate_response,
     portal_settings,
 )
@@ -508,7 +508,7 @@ def upload_image(doctype=None, docname=None, field_name=None, image=None):
         if not exists:
             frappe.throw("Doctype {0} is not exist".format(docname))
 
-        delete_image(doctype, docname, field_name)
+        delete_file(doctype, docname, field_name)
         image_link = add_file(image, "image", doctype, docname)
 
         frappe.set_value(doctype, docname, field_name, image_link)
@@ -516,6 +516,36 @@ def upload_image(doctype=None, docname=None, field_name=None, image=None):
         if image_link:
             return generate_response(
                 "S", "200", message="Image Added Successfully", data=image_link
+            )
+    except Exception as e:
+        return generate_response("F", error=e)
+
+
+@frappe.whitelist()
+def upload_file(doctype=None, docname=None, field_name=None, file=None, file_name=None):
+    try:
+        if not doctype:
+            frappe.throw("'doctype' parameter is required")
+        if not docname:
+            frappe.throw("'docname' parameter is required")
+        if not field_name:
+            frappe.throw("'field_name' parameter is required")
+        if not file:
+            frappe.throw("'file' parameter is required")
+        if not file_name:
+            frappe.throw("'file_name' parameter is required")
+        exists = frappe.db.exists(doctype, docname)
+        if not exists:
+            frappe.throw("Doctype {0} is not exist".format(docname))
+
+        delete_file(doctype, docname, field_name)
+        file_link = add_file(file, field_name, doctype, docname, file_name)
+
+        frappe.set_value(doctype, docname, field_name, file_link)
+        frappe.db.commit()
+        if file_link:
+            return generate_response(
+                "S", "200", message="Image Added Successfully", data=file_link
             )
     except Exception as e:
         return generate_response("F", error=e)
