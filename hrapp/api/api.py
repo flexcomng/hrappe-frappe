@@ -545,7 +545,7 @@ def upload_file(doctype=None, docname=None, field_name=None, file=None, file_nam
         frappe.db.commit()
         if file_link:
             return generate_response(
-                "S", "200", message="Image Added Successfully", data=file_link
+                "S", "200", message="File Added Successfully", data=file_link
             )
     except Exception as e:
         return generate_response("F", error=e)
