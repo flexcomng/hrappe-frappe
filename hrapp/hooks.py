@@ -46,7 +46,7 @@ app_license = "MIT"
 
 # website user home page (by Role)
 # role_home_page = {
-#	"Role": "home_page"
+# 	"Role": "home_page"
 # }
 
 # Generators
@@ -142,24 +142,30 @@ doc_events = {
 # auto_cancel_exempted_doctypes = ["Auto Repeat"]
 
 fixtures = [
-    {"doctype": "Custom Field", "filters": [["name", "in", (
-        "User-send_emp_welcome_email",
-    )]]},
-    {"doctype": "Property Setter", "filters": [["name", "in", (
-        "User-send_welcome_email-default",
-    )]]},
-    {"doctype": "Custom DocPerm", "filters": [["name", "in", (
-        "acc1d831e9",
-        "c91fbba028",
-        "a2a3bf0a48",
-        "f5531816ad"
-    )]]},
-
-    {"doctype": "Desk Page", "filters": [["name", "in", (
-        "HR",
-    )]]},
-
-    {"doctype": "Role", "filters": [["name", "in", (
-        "Panelist",
-    )]]},
+    {
+        "doctype": "Custom Field",
+        "filters": [
+            [
+                "name",
+                "in",
+                (
+                    "User-send_emp_welcome_email",
+                    "Expense Claim-document",
+                    "Leave Application-document",
+                ),
+            ]
+        ],
+    },
+    {
+        "doctype": "Property Setter",
+        "filters": [["name", "in", ("User-send_welcome_email-default",)]],
+    },
+    {
+        "doctype": "Custom DocPerm",
+        "filters": [
+            ["name", "in", ("acc1d831e9", "c91fbba028", "a2a3bf0a48", "f5531816ad")]
+        ],
+    },
+    {"doctype": "Desk Page", "filters": [["name", "in", ("HR",)]]},
+    {"doctype": "Role", "filters": [["name", "in", ("Panelist",)]]},
 ]
