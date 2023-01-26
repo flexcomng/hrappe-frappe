@@ -42,8 +42,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Manager Rating",
-   "options": "\n1\n2\n3\n4\n5",
-   "read_only": 1
+   "options": "\n1\n2\n3\n4\n5"
   },
   {
    "columns": 1,
@@ -58,7 +57,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2021-03-16 15:45:07.335811",
+ "modified": "2022-06-07 07:39:25.210795",
  "modified_by": "Administrator",
  "module": "HRapp",
  "name": "HR Employee Appraisal Job Details",
